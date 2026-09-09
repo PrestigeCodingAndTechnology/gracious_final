@@ -1,0 +1,38 @@
+<% if (settings?.liveChatEnabled !== 'false') { %>
+<div class="live-chat" id="liveChat">
+  <button class="chat-launcher" id="chatLauncher" type="button" aria-label="Open live chat" aria-expanded="false" aria-controls="chatPanel">
+    <span class="chat-launcher-icon"><i class="fa-regular fa-comments"></i><i class="status-pulse"></i></span>
+    <span><strong>Questions?</strong><small>Chat with our team</small></span>
+    <b id="chatUnread" hidden>0</b>
+  </button>
+  <section class="chat-panel" id="chatPanel" aria-hidden="true" role="dialog" aria-label="Live chat with Gracious Senior Living">
+    <header class="chat-header">
+      <div class="chat-avatar"><i class="fa-solid fa-leaf"></i></div>
+      <div><strong>Gracious Care Team</strong><small id="chatPresence"><i></i> Here to help</small></div>
+      <button type="button" id="chatClose" aria-label="Close chat"><i class="fa-solid fa-xmark"></i></button>
+    </header>
+    <div class="chat-welcome" id="chatWelcome">
+      <span class="chat-kicker">Welcome to Gracious</span>
+      <h3>How can we help your family?</h3>
+      <p>Ask us about care, availability or planning a personal visit. Your conversation is private.</p>
+      <form id="chatStartForm">
+        <label><span>Your name</span><input name="name" maxlength="80" autocomplete="name" placeholder="How should we address you?" required></label>
+        <label><span>Email <em>optional</em></span><input name="email" type="email" maxlength="160" autocomplete="email" placeholder="you@example.com"></label>
+        <label><span>Phone <em>optional</em></span><input name="phone" maxlength="40" autocomplete="tel" placeholder="Best number to reach you"></label>
+        <button class="btn btn-primary chat-start" type="submit"><span>Start conversation</span><i class="fa-solid fa-arrow-right"></i></button>
+      </form>
+      <small class="chat-privacy"><i class="fa-solid fa-lock"></i> Your details are used only to assist with your inquiry.</small>
+    </div>
+    <div class="chat-conversation" id="chatConversation" hidden>
+      <div class="chat-messages" id="chatMessages" aria-live="polite" aria-relevant="additions"></div>
+      <div class="chat-typing" id="chatTyping" hidden><span></span><span></span><span></span> Gracious team is typing</div>
+      <form class="chat-compose" id="chatMessageForm">
+        <textarea id="chatMessageInput" maxlength="2000" rows="1" placeholder="Write a message…" aria-label="Your message" required></textarea>
+        <button type="submit" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </section>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
+<% } %>

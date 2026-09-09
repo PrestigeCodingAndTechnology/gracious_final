@@ -1,0 +1,20 @@
+<%- include('../partials/head',{title}) %>
+<%- include('../partials/header',{settings}) %>
+<main id="main-content">
+  <%- include('../partials/public-hero') %>
+  <section class="gallery-mode-nav" aria-label="Choose gallery type">
+    <div class="container gallery-mode-nav-inner">
+      <div><span class="eyebrow dark">Explore our community</span><strong>Choose what you would like to view.</strong></div>
+      <div class="gallery-mode-actions" role="group" aria-label="Gallery options">
+        <a class="gallery-mode-btn" href="/gallery"><i class="fa-regular fa-images"></i><span>Photos Gallery</span></a>
+        <a class="gallery-mode-btn is-active" href="/video-gallery" aria-current="page"><i class="fa-solid fa-circle-play"></i><span>Videos Gallery</span></a>
+      </div>
+    </div>
+  </section>
+  <section class="section video-section"><div class="container"><div class="gallery-intro reveal"><div><span class="eyebrow dark">Watch &amp; discover</span><h2>Community moments in motion.</h2></div><a class="gallery-switch" href="/gallery"><i class="fa-regular fa-images"></i> View photographs</a></div>
+    <% if (media.length) { %><div class="video-grid">
+      <% media.forEach((item,index)=>{ %><article class="video-card reveal" data-video-card><div class="video-frame"><video controls playsinline preload="metadata" <% if(item.posterUrl){ %>poster="<%= item.posterUrl %>"<% } %> aria-label="<%= item.title || 'Gracious Senior Living video' %>"><source src="<%= item.url %>">Your browser does not support embedded video.</video><span class="video-number"><%= String(index+1).padStart(2,'0') %></span><div class="video-error" hidden><i class="fa-solid fa-video-slash"></i><p>This video is temporarily unavailable.</p></div></div><div class="video-copy"><span class="eyebrow dark">Gracious moments</span><h2><%= item.title || 'Life at Gracious Senior Living' %></h2><p><%= item.caption || 'A closer look at our warm, home-style community.' %></p></div></article><% }) %>
+    </div><% } else { %><div class="empty-state reveal"><i class="fa-regular fa-circle-play"></i><h2>New community videos are coming.</h2><p>In the meantime, explore our photo gallery or arrange a personal tour.</p><div class="actions"><a class="btn btn-primary" href="/gallery">View Photos</a><a class="btn btn-outline" href="/contact">Schedule a Visit</a></div></div><% } %>
+  </div></section>
+</main>
+<%- include('../partials/footer',{settings}) %>

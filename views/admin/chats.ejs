@@ -1,0 +1,36 @@
+<%- include('../partials/admin-head',{title}) %>
+<section class="chat-admin" data-selected-id="<%= selected?._id || '' %>" data-status="<%= status %>" data-selected-name="<%= selected?.name || '' %>">
+  <aside class="chat-list admin-panel" aria-label="Chat conversations">
+    <header class="chat-list-header"><div><span class="chat-title-icon"><i class="fa-regular fa-comments"></i></span><div><h2>Conversations</h2><p id="conversationCount"><%= conversations.length %> <%= status %></p></div></div><span class="socket-status" id="adminSocketStatus"><i></i><em>Connecting</em></span></header>
+    <div class="chat-search"><i class="fa-solid fa-magnifying-glass"></i><input id="conversationSearch" type="search" placeholder="Search conversations…" aria-label="Search conversations"></div>
+    <nav class="chat-filters" aria-label="Conversation status"><a class="<%=status==='open'?'active':''%>" href="/admin/chats?status=open"><span>Open</span></a><a class="<%=status==='closed'?'active':''%>" href="/admin/chats?status=closed"><span>Closed</span></a></nav>
+    <div class="conversation-list" id="conversationList" aria-live="polite">
+      <% if (!conversations.length) { %><div class="conversation-empty" data-empty-conversations><i class="fa-regular fa-message"></i><strong>No <%=status%> conversations</strong><span><%= status === 'open' ? 'New visitor chats will appear here instantly.' : 'Closed conversations will be stored here.' %></span></div><% } %>
+      <% conversations.forEach(c => { %>
+        <a class="conversation-row <%= selected && String(selected._id)===String(c._id)?'selected':'' %>" data-conversation-id="<%=c._id%>" data-name="<%=c.name || 'Website Visitor'%>" data-email="<%=c.email || ''%>" data-phone="<%=c.phone || ''%>" data-status="<%=c.status%>" href="/admin/chats?status=<%=status%>&amp;id=<%=c._id%>">
+          <span class="conversation-avatar"><%= (c.name || 'V').charAt(0).toUpperCase() %><i class="<%=c.visitorOnline?'online':''%>"></i></span>
+          <span class="conversation-content"><span class="conversation-top"><strong class="conversation-name"><%=c.name || 'Website Visitor'%></strong><time class="conversation-time" datetime="<%=new Date(c.lastMessageAt || c.createdAt).toISOString()%>"><%=new Date(c.lastMessageAt || c.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})%></time></span><small class="conversation-contact"><%=c.email || c.phone || 'Website visitor'%></small><span class="conversation-bottom"><em class="conversation-preview"><%=c.lastMessage || 'Conversation started'%></em><b class="conversation-unread" <%=c.unreadAdmin?'':'hidden'%>><%=c.unreadAdmin||0%></b></span></span>
+        </a>
+      <% }) %>
+    </div>
+  </aside>
+
+  <section class="chat-thread admin-panel" aria-label="Selected chat conversation">
+    <% if(selected){ %>
+      <header class="thread-header">
+        <div class="thread-person"><span class="thread-avatar"><%= (selected.name || 'V').charAt(0).toUpperCase() %><i id="visitorPresence" class="<%=selected.visitorOnline?'online':''%>"></i></span><div><h2><%=selected.name || 'Website Visitor'%></h2><p><span id="visitorPresenceText"><%=selected.visitorOnline?'Online now':'Currently offline'%></span><% if(selected.email){ %><i>·</i><a href="mailto:<%=selected.email%>"><%=selected.email%></a><% } %><% if(selected.phone){ %><i>·</i><a href="tel:<%=selected.phone.replace(/[^0-9+]/g,'')%>"><%=selected.phone%></a><% } %></p></div></div>
+        <div class="thread-actions"><form action="/admin/chats/<%=selected._id%>/status" method="post"><input type="hidden" name="status" value="<%=selected.status==='open'?'closed':'open'%>"><button class="admin-btn subtle small" type="submit"><i class="fa-solid <%=selected.status==='open'?'fa-circle-check':'fa-rotate-left'%>"></i><%=selected.status==='open'?'Close chat':'Reopen chat'%></button></form><form action="/admin/chats/<%=selected._id%>?_method=DELETE" method="post" data-confirm="Delete this conversation and every message permanently?"><button class="icon-danger" type="submit" aria-label="Delete conversation" title="Delete conversation"><i class="fa-regular fa-trash-can"></i></button></form></div>
+      </header>
+      <div class="thread-context"><span><i class="fa-solid fa-shield-halved"></i> Private conversation</span><time>Started <%=new Date(selected.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})%></time></div>
+      <div class="admin-messages" id="adminMessages" aria-live="polite" aria-relevant="additions">
+        <% if(!messages.length){ %><div class="thread-start"><span><i class="fa-regular fa-comments"></i></span><strong>Conversation started</strong><p>Send a warm welcome or wait for the visitor’s first message.</p></div><% } %>
+        <% messages.forEach(m => { %><div class="admin-message <%=m.sender%>" data-id="<%=m._id%>"><div><%=m.body%></div><small><%=m.sender==='admin'?'Gracious Team':selected.name%> · <%=new Date(m.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})%></small></div><% }) %>
+      </div>
+      <div class="admin-typing" id="adminTyping" hidden><span></span><span></span><span></span> <%=selected.name%> is typing</div>
+      <% if(selected.status === 'open'){ %><form class="admin-compose" id="adminChatForm"><textarea id="adminChatInput" rows="1" maxlength="2000" placeholder="Write a reply to <%=selected.name%>…" aria-label="Reply to <%=selected.name%>" required></textarea><div class="compose-actions"><span>Enter to send · Shift + Enter for a new line</span><button type="submit" aria-label="Send reply"><i class="fa-solid fa-paper-plane"></i><em>Send</em></button></div></form><% } else { %><div class="closed-chat-notice"><i class="fa-solid fa-circle-check"></i><span><strong>This conversation is closed.</strong><small>Reopen it to send another message.</small></span></div><% } %>
+    <% } else { %>
+      <div class="empty-thread"><span class="empty-thread-icon"><i class="fa-regular fa-comments"></i><i></i></span><h2>Your live chat inbox</h2><p>Select a conversation to read the complete history and respond in real time.</p><div><span><i class="fa-solid fa-bolt"></i> Instant updates</span><span><i class="fa-solid fa-keyboard"></i> Typing indicators</span><span><i class="fa-solid fa-circle"></i> Live presence</span></div></div>
+    <% } %>
+  </section>
+</section>
+<%- include('../partials/admin-foot') %>

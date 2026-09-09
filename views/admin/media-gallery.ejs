@@ -1,0 +1,48 @@
+<%- include('../partials/admin-head',{title}) %>
+<% const visibleCount = media.filter(item => item.active).length; const hiddenCount = media.length - visibleCount; const isPhoto = mediaType === 'image'; %>
+<section class="media-summary split-gallery-summary">
+  <article><span><i class="fa-solid <%= isPhoto ? 'fa-camera-retro' : 'fa-film' %>"></i></span><div><strong><%= media.length %></strong><small>Total <%= config.plural %></small></div></article>
+  <article><span><i class="fa-solid fa-eye"></i></span><div><strong><%= visibleCount %></strong><small>Visible</small></div></article>
+  <article><span><i class="fa-solid fa-eye-slash"></i></span><div><strong><%= hiddenCount %></strong><small>Hidden</small></div></article>
+  <a class="admin-btn primary" href="#add-media"><i class="fa-solid fa-plus"></i> Add <%= isPhoto ? 'Photograph' : 'Video' %></a>
+</section>
+
+<section class="gallery-admin-switch" aria-label="Gallery administration sections">
+  <a class="<%= isPhoto ? 'active' : '' %>" href="/admin/photos"><i class="fa-regular fa-images"></i><span>Photos Gallery</span></a>
+  <a class="<%= !isPhoto ? 'active' : '' %>" href="/admin/videos"><i class="fa-solid fa-circle-play"></i><span>Videos Gallery</span></a>
+</section>
+
+<section class="admin-panel upload-panel" id="add-media">
+  <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span><div><h2>Add a new <%= config.singular %></h2><p>This item will be added only to the <%= isPhoto ? 'photos' : 'videos' %> gallery.</p></div></div><span class="file-limit"><i class="fa-solid fa-circle-info"></i> Maximum file size: 50 MB</span></header>
+  <form class="media-upload-form" method="post" action="/admin/<%= config.route %>" enctype="multipart/form-data">
+    <div class="upload-source">
+      <label class="drop-zone" data-file-drop><input id="mediaFile" type="file" name="file" accept="<%= isPhoto ? 'image/*' : 'video/*' %>" data-file-input><span class="drop-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></span><strong>Drop a <%= config.singular %> here</strong><small>or select a file from your computer</small><em><%= isPhoto ? 'JPG, PNG, WEBP or GIF' : 'MP4 or compatible browser video' %></em><span class="file-preview" data-file-preview hidden></span></label>
+      <div class="upload-divider"><span>or use a URL</span></div>
+      <label class="admin-field"><span>External <%= config.singular %> URL</span><span class="input-icon"><i class="fa-solid fa-link"></i><input name="url" type="url" placeholder="https://example.com/<%= isPhoto ? 'photo.jpg' : 'video.mp4' %>"></span><small>Use a direct link to the <%= config.singular %> file.</small></label>
+    </div>
+    <div class="media-details">
+      <div class="field-grid"><label class="admin-field"><span>Display order</span><input type="number" name="sortOrder" value="0" min="0"><small>Lower numbers appear first.</small></label><label class="admin-field"><span>Status after upload</span><input value="Visible on public website" disabled></label></div>
+      <label class="admin-field"><span>Title</span><input name="title" maxlength="120" placeholder="A clear title for this <%= config.singular %>"></label>
+      <label class="admin-field"><span>Caption</span><textarea name="caption" maxlength="300" rows="3" placeholder="Optional context shown with this <%= config.singular %>"></textarea></label>
+      <% if (isPhoto) { %><label class="admin-field"><span>Alternative text</span><input name="alt" maxlength="180" placeholder="Describe the photograph for accessibility"><small>Important for visitors who use screen readers.</small></label><% } %>
+      <% if (!isPhoto) { %><label class="admin-field"><span>Video poster URL</span><input name="posterUrl" type="url" placeholder="https://example.com/video-cover.jpg"><small>Optional preview image displayed before playback.</small></label><% } %>
+      <button class="admin-btn primary submit-media" type="submit"><i class="fa-solid fa-plus"></i> Add to <%= isPhoto ? 'Photos' : 'Videos' %> Gallery</button>
+    </div>
+  </form>
+</section>
+
+<section class="admin-panel library-panel">
+  <header class="panel-heading compact"><div><span class="panel-icon"><i class="fa-regular fa-folder-open"></i></span><div><h2>Current <%= config.plural %></h2><p>Edit, hide, show or delete items without affecting the other gallery.</p></div></div><div class="media-toolbar"><div class="toolbar-search compact"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Search <%= config.plural %>…" aria-label="Search <%= config.plural %>" data-list-search="mediaList"></div><div class="toolbar-filter compact"><i class="fa-solid fa-filter"></i><select aria-label="Filter by visibility" data-list-status="mediaList"><option value="all">All</option><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div></div></header>
+  <% if (media.length) { %><div class="media-library-grid" id="mediaList" data-filter-list>
+    <% media.forEach(m=>{ %><article class="media-admin-card <%= m.active ? '' : 'is-hidden' %>" id="media-<%= m._id || m.id %>" data-filter-item data-status="<%= m.active ? 'visible' : 'hidden' %>" data-search="<%= ((m.title || '') + ' ' + (m.caption || '')).toLowerCase() %>">
+      <div class="media-preview"><% if(isPhoto){ %><img src="<%=m.url%>" alt="<%=m.alt||m.title||''%>" loading="lazy"><% }else{ %><% if(m.posterUrl){ %><img src="<%=m.posterUrl%>" alt="Video poster"><% } else { %><span class="video-placeholder"><i class="fa-solid fa-film"></i></span><% } %><i class="media-play fa-solid fa-play"></i><% } %><span class="media-type"><i class="fa-solid <%=isPhoto?'fa-image':'fa-film'%>"></i> <%= isPhoto ? 'photo' : 'video' %></span><span class="visibility <%=m.active?'active':'inactive'%>"><i></i><%=m.active?'Visible':'Hidden'%></span></div>
+      <div class="media-card-body"><div class="media-card-title"><div><h3><%=m.title||('Untitled '+config.singular)%></h3><p><%=m.caption||'No caption provided.'%></p></div><span>#<%=m.sortOrder%></span></div>
+        <form class="media-visibility-form" method="post" action="/admin/<%= config.route %>/<%=m._id || m.id%>/visibility"><input type="hidden" name="active" value="<%= m.active ? 'false' : 'true' %>"><button class="media-visibility-action <%= m.active ? 'hide' : 'show' %>" type="submit"><i class="fa-solid <%= m.active ? 'fa-eye-slash' : 'fa-eye' %>"></i><span><strong><%= m.active ? 'Hide from website' : 'Show on website' %></strong><small><%= m.active ? 'Remove from the public gallery' : 'Restore to the public gallery' %></small></span></button></form>
+        <details><summary><i class="fa-solid fa-pen"></i> Edit <%= isPhoto ? 'photo' : 'video' %> <i class="fa-solid fa-chevron-down"></i></summary><form class="media-edit-form" method="post" action="/admin/<%= config.route %>/<%=m._id || m.id%>" enctype="multipart/form-data"><label class="admin-field"><span>Replace <%= config.singular %> file</span><input type="file" name="file" accept="<%= isPhoto ? 'image/*' : 'video/*' %>"><small>Optional. Leave empty to keep the current file.</small></label><label class="admin-field"><span>Or replace with direct URL</span><input name="url" type="url" placeholder="https://example.com/<%= isPhoto ? 'photo.jpg' : 'video.mp4' %>"><small>Optional. A new file takes priority over this URL.</small></label><label class="admin-field"><span>Title</span><input name="title" maxlength="120" value="<%=m.title||''%>"></label><label class="admin-field"><span>Caption</span><textarea name="caption" maxlength="300" rows="2"><%=m.caption||''%></textarea></label><% if(isPhoto){ %><label class="admin-field"><span>Alternative text</span><input name="alt" maxlength="180" value="<%=m.alt||''%>"></label><% } else { %><label class="admin-field"><span>Poster URL</span><input name="posterUrl" type="url" value="<%=m.posterUrl||''%>"></label><% } %><label class="admin-field"><span>Display order</span><input type="number" name="sortOrder" value="<%=m.sortOrder%>" min="0"></label><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></form></details>
+        <form class="media-delete" method="post" action="/admin/<%= config.route %>/<%=m._id || m.id%>?_method=DELETE" data-confirm="Delete this <%= config.singular %> permanently?"><button type="submit"><i class="fa-regular fa-trash-can"></i> Delete <%= config.singular %></button></form>
+      </div>
+    </article><% }) %>
+  </div><div class="filter-empty" data-filter-empty hidden><i class="fa-solid fa-magnifying-glass"></i><h3>No matching <%= config.plural %></h3><p>Try another search term or visibility filter.</p></div>
+  <% } else { %><div class="admin-empty"><span><i class="fa-solid <%= isPhoto ? 'fa-camera-retro' : 'fa-film' %>"></i></span><h2>No <%= config.plural %> yet</h2><p>Use the form above to add the first <%= config.singular %>.</p><a class="admin-btn primary" href="#add-media">Add <%= isPhoto ? 'Photograph' : 'Video' %></a></div><% } %>
+</section>
+<%- include('../partials/admin-foot') %>

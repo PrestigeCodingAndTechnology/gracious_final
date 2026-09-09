@@ -1,0 +1,55 @@
+<section class="prefooter" aria-label="Schedule a tour">
+  <div class="container prefooter-inner">
+    <div>
+      <span class="eyebrow">Your next step</span>
+      <h2>Come see what gracious living feels like.</h2>
+    </div>
+    <a class="btn btn-light" href="/contact">Plan Your Visit <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <a class="site-brand footer-brand" href="/">
+        <img class="brand-logo footer-logo" src="/media/brand/gracious-logo.png" alt="Gracious Senior Living">
+      </a>
+      <p>An intimate, physician-led community where every resident is known, valued and cared for like family.</p>
+      <span class="footer-promise"><i class="fa-solid fa-heart"></i> It’s by His Grace.</span>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <ul class="footer-links">
+        <li><a href="/about">Our Story</a></li>
+        <li><a href="/care">Care &amp; Services</a></li>
+        <li><a href="/living">Living Spaces</a></li>
+        <li><a href="/gallery">Photo Gallery</a></li>
+        <li><a href="/video-gallery">Video Gallery</a></li>
+        <li><a href="/reviews">Family Reviews</a></li>
+        <li><a href="/apply">Join Our Team</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul class="footer-contact">
+        <li><i class="fa-solid fa-location-dot"></i><span><%= settings?.address || '5402 Weddington Road, Wesley Chapel NC 28110' %></span></li>
+        <li><i class="fa-solid fa-phone"></i><a href="tel:<%= (settings?.phone || '704-218-2424').replace(/[^0-9+]/g,'') %>"><%= settings?.phone || '704-218-2424' %></a></li>
+        <% if (settings?.mobile) { %><li><i class="fa-solid fa-mobile-screen"></i><a href="tel:<%= settings.mobile.replace(/[^0-9+]/g,'') %>"><%= settings.mobile %></a></li><% } %>
+        <li><i class="fa-regular fa-envelope"></i><a href="mailto:<%= settings?.email || 'info@graciouscarenc.com' %>"><%= settings?.email || 'info@graciouscarenc.com' %></a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Visits</h3>
+      <p>Personal tours are available by appointment. Let us learn about your family and answer every question.</p>
+      <a class="footer-link-arrow" href="/contact">Request a personal tour <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>&copy; 2026 Gracious Senior Living | Developed by Prestige Coding &amp; Technology Ltd. All rights reserved.</span>
+    <a href="/admin/login" aria-label="Administrator login">Administration</a>
+  </div>
+</footer>
+<button class="scroll-top" id="scrollTop" type="button" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+<%- include('chat-widget') %>
+<script src="/js/site.js"></script>
+</body>
+</html>

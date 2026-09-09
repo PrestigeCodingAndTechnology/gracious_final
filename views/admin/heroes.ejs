@@ -1,0 +1,58 @@
+<%- include('../partials/admin-head',{title}) %>
+<% const total = Object.values(counts).reduce((sum, value) => sum + value, 0); const visible = heroes.filter(hero => hero.active).length; %>
+<section class="hero-admin-summary">
+  <article><span><i class="fa-solid fa-panorama"></i></span><div><strong><%= total %></strong><small>Hero slides</small></div></article>
+  <article><span><i class="fa-solid fa-layer-group"></i></span><div><strong><%= Object.values(counts).filter(Boolean).length %></strong><small>Managed sections</small></div></article>
+  <article><span><i class="fa-solid fa-eye"></i></span><div><strong><%= visible %></strong><small>Visible in this view</small></div></article>
+  <a class="admin-btn primary" href="#add-hero"><i class="fa-solid fa-plus"></i> Add Hero Slide</a>
+</section>
+
+<nav class="hero-page-tabs" aria-label="Filter hero sections">
+  <a class="<%= pageFilter === 'all' ? 'active' : '' %>" href="/admin/heroes">All <span><%= total %></span></a>
+  <% heroPages.forEach(page => { %><a class="<%= pageFilter === page ? 'active' : '' %>" href="/admin/heroes?page=<%= page %>"><%= pageLabels[page] %><span><%= counts[page] || 0 %></span></a><% }) %>
+</nav>
+
+<section class="admin-panel hero-create-panel" id="add-hero">
+  <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-image"></i></span><div><h2>Add a hero or slider image</h2><p>Create a new hero slide for any public page. Multiple active slides on the same page rotate automatically.</p></div></div><span class="file-limit"><i class="fa-solid fa-circle-info"></i> Background image: maximum 15 MB</span></header>
+  <form class="hero-admin-form" method="post" action="/admin/heroes" enctype="multipart/form-data">
+    <div class="hero-form-grid">
+      <label class="admin-field"><span>Public page *</span><select name="page" required><% heroPages.forEach(page => { %><option value="<%= page %>" <%= pageFilter === page ? 'selected' : '' %>><%= pageLabels[page] %></option><% }) %></select></label>
+      <label class="admin-field"><span>Display order</span><input name="sortOrder" type="number" value="0" min="0"><small>Lower numbers appear first.</small></label>
+      <label class="admin-field span-2"><span>Eyebrow / kicker</span><input name="eyebrow" maxlength="120" placeholder="e.g. About Gracious"></label>
+      <label class="admin-field span-2"><span>Headline *</span><input name="title" maxlength="220" required placeholder="Main hero headline"></label>
+      <label class="admin-field span-2"><span>Supporting text</span><textarea name="text" maxlength="700" rows="3" placeholder="Short supporting paragraph"></textarea></label>
+      <label class="admin-field"><span>Font Awesome icon class</span><input name="icon" maxlength="80" placeholder="fa-house-chimney-heart"><small>Optional; used beside the kicker.</small></label>
+      <label class="admin-field"><span>Background position</span><input name="backgroundPosition" maxlength="80" value="center center" placeholder="center center"><small>Examples: center center, center 35%, 50% 25%.</small></label>
+    </div>
+    <div class="hero-background-picker">
+      <label class="drop-zone hero-drop-zone" data-file-drop><input type="file" name="image" accept="image/*" data-file-input><span class="drop-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></span><strong>Upload hero background</strong><small>Drag and drop or choose an image</small><em>JPG, PNG, WEBP — up to 15 MB</em><span class="file-preview" data-file-preview hidden></span></label>
+      <div class="upload-divider"><span>or</span></div>
+      <label class="admin-field"><span>Background image URL</span><span class="input-icon"><i class="fa-solid fa-link"></i><input name="imageUrl" type="text" placeholder="/media/gallery/g1.jpeg or https://..."></span></label>
+      <label class="admin-field"><span>Image alternative text</span><input name="imageAlt" maxlength="220" placeholder="Describe the background image"></label>
+    </div>
+    <div class="hero-cta-grid"><label class="admin-field"><span>Primary button label</span><input name="primaryLabel" maxlength="80" placeholder="Schedule a Visit"></label><label class="admin-field"><span>Primary button link</span><input name="primaryHref" maxlength="300" placeholder="/contact"></label><label class="admin-field"><span>Secondary button label</span><input name="secondaryLabel" maxlength="80" placeholder="Explore Our Care"></label><label class="admin-field"><span>Secondary button link</span><input name="secondaryHref" maxlength="300" placeholder="/care"></label></div>
+    <div class="hero-form-actions"><p><i class="fa-solid fa-wand-magic-sparkles"></i> The public hero updates immediately after saving.</p><button class="admin-btn primary" type="submit"><i class="fa-solid fa-plus"></i> Add Hero Slide</button></div>
+  </form>
+</section>
+
+<section class="admin-panel hero-library" id="hero-list">
+  <header class="panel-heading compact"><div><span class="panel-icon"><i class="fa-solid fa-images"></i></span><div><h2><%= pageFilter === 'all' ? 'All public hero sections' : pageLabels[pageFilter] %></h2><p>Edit content, replace backgrounds, reorder slides, control visibility or delete a hero.</p></div></div></header>
+  <% if (heroes.length) { %><div class="hero-admin-list">
+    <% heroes.forEach(hero => { %><article class="hero-admin-card <%= hero.active ? '' : 'is-hidden' %>" id="hero-<%= hero._id || hero.id %>">
+      <div class="hero-admin-preview" style="--hero-admin-image:url('<%= hero.imageUrl %>');--hero-admin-position:<%= hero.backgroundPosition || 'center center' %>"><div><span><%= pageLabels[hero.page] || hero.page %></span><small>#<%= hero.sortOrder %></small></div><strong><%= hero.title %></strong><p><%= hero.text || 'No supporting text.' %></p><em class="visibility <%= hero.active ? 'active' : 'inactive' %>"><i></i><%= hero.active ? 'Visible' : 'Hidden' %></em></div>
+      <div class="hero-admin-card-body">
+        <div class="hero-card-actions"><form method="post" action="/admin/heroes/<%= hero._id || hero.id %>/visibility"><input type="hidden" name="active" value="<%= hero.active ? 'false' : 'true' %>"><button class="admin-btn <%= hero.active ? 'subtle' : 'primary' %> small" type="submit"><i class="fa-solid <%= hero.active ? 'fa-eye-slash' : 'fa-eye' %>"></i><%= hero.active ? 'Hide' : 'Show' %></button></form><a class="admin-btn subtle small" href="<%= hero.page === 'home' ? '/' : '/' + hero.page.replace('video-gallery','video-gallery').replace('application','apply') %>" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Preview</a></div>
+        <details><summary><i class="fa-solid fa-pen-to-square"></i> Edit hero content &amp; background <i class="fa-solid fa-chevron-down"></i></summary>
+          <form class="hero-edit-form" method="post" action="/admin/heroes/<%= hero._id || hero.id %>" enctype="multipart/form-data">
+            <div class="hero-form-grid"><label class="admin-field"><span>Public page *</span><select name="page" required><% heroPages.forEach(page => { %><option value="<%= page %>" <%= hero.page === page ? 'selected' : '' %>><%= pageLabels[page] %></option><% }) %></select></label><label class="admin-field"><span>Display order</span><input name="sortOrder" type="number" value="<%= hero.sortOrder %>" min="0"></label><label class="admin-field span-2"><span>Eyebrow / kicker</span><input name="eyebrow" maxlength="120" value="<%= hero.eyebrow || '' %>"></label><label class="admin-field span-2"><span>Headline *</span><input name="title" maxlength="220" required value="<%= hero.title %>"></label><label class="admin-field span-2"><span>Supporting text</span><textarea name="text" maxlength="700" rows="3"><%= hero.text || '' %></textarea></label><label class="admin-field"><span>Icon class</span><input name="icon" maxlength="80" value="<%= hero.icon || '' %>"></label><label class="admin-field"><span>Background position</span><input name="backgroundPosition" maxlength="80" value="<%= hero.backgroundPosition || 'center center' %>"></label></div>
+            <div class="hero-edit-background"><label class="admin-field"><span>Current/background image URL *</span><input name="imageUrl" required value="<%= hero.imageUrl %>"></label><label class="admin-field"><span>Replace with uploaded image</span><input type="file" name="image" accept="image/*"><small>Leave empty to keep the current image.</small></label><label class="admin-field"><span>Image alternative text</span><input name="imageAlt" maxlength="220" value="<%= hero.imageAlt || '' %>"></label></div>
+            <div class="hero-cta-grid"><label class="admin-field"><span>Primary button label</span><input name="primaryLabel" maxlength="80" value="<%= hero.primaryLabel || '' %>"></label><label class="admin-field"><span>Primary button link</span><input name="primaryHref" maxlength="300" value="<%= hero.primaryHref || '' %>"></label><label class="admin-field"><span>Secondary button label</span><input name="secondaryLabel" maxlength="80" value="<%= hero.secondaryLabel || '' %>"></label><label class="admin-field"><span>Secondary button link</span><input name="secondaryHref" maxlength="300" value="<%= hero.secondaryHref || '' %>"></label></div>
+            <button class="admin-btn primary small" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Hero Changes</button>
+          </form>
+        </details>
+        <form class="hero-delete-form" method="post" action="/admin/heroes/<%= hero._id || hero.id %>?_method=DELETE" data-confirm="Delete this hero slide permanently?"><button type="submit"><i class="fa-regular fa-trash-can"></i> Delete hero slide</button></form>
+      </div>
+    </article><% }) %>
+  </div><% } else { %><div class="admin-empty"><span><i class="fa-solid fa-panorama"></i></span><h2>No hero slides in this section</h2><p>Add a slide above or choose another public page.</p><a class="admin-btn primary" href="#add-hero">Add Hero Slide</a></div><% } %>
+</section>
+<%- include('../partials/admin-foot') %>

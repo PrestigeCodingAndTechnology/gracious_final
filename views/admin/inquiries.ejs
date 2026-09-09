@@ -1,0 +1,28 @@
+<%- include('../partials/admin-head',{title}) %>
+<section class="admin-toolbar">
+  <div class="toolbar-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Search name, email or message…" aria-label="Search inquiries" data-list-search="inquiriesList"></div>
+  <div class="toolbar-filter"><i class="fa-solid fa-filter"></i><select aria-label="Filter inquiries by status" data-list-status="inquiriesList"><option value="all">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="closed">Closed</option></select></div>
+  <span class="toolbar-count"><strong><%= inquiries.length %></strong> total <%= inquiries.length === 1 ? 'inquiry' : 'inquiries' %></span>
+</section>
+
+<section class="admin-panel table-panel" id="inquiriesList" data-filter-list>
+  <header class="panel-heading compact"><div><span class="panel-icon"><i class="fa-regular fa-envelope-open"></i></span><div><h2>Family inquiries</h2><p>Keep contact details, messages and follow-up notes organized.</p></div></div><a class="admin-btn subtle" href="/contact" target="_blank" rel="noopener"><i class="fa-regular fa-eye"></i> Contact page</a></header>
+  <% if (inquiries.length) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table inquiry-table">
+      <thead><tr><th>Contact</th><th>Inquiry</th><th>Follow-up</th></tr></thead>
+      <tbody>
+        <% inquiries.forEach(i=>{ %>
+        <tr data-filter-item data-status="<%= i.status %>" data-search="<%= (i.firstName + ' ' + (i.lastName || '') + ' ' + i.email + ' ' + (i.interest || '') + ' ' + i.message).toLowerCase() %>">
+          <td><div class="person-cell"><span class="table-avatar inquiry"><%= i.firstName.charAt(0).toUpperCase() %></span><div><strong><%= i.firstName %> <%= i.lastName || '' %></strong><a href="mailto:<%= i.email %>"><i class="fa-regular fa-envelope"></i> <%= i.email %></a><% if(i.phone){ %><a href="tel:<%= i.phone.replace(/[^0-9+]/g,'') %>"><i class="fa-solid fa-phone"></i> <%= i.phone %></a><% } %><time><i class="fa-regular fa-clock"></i> <%= new Date(i.createdAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) %></time></div></div></td>
+          <td class="inquiry-content"><span class="status-badge <%= i.status %>"><i></i><%= i.status %></span><% if(i.interest){ %><strong><%= i.interest %></strong><% } %><p><%= i.message %></p></td>
+          <td class="action-cell inquiry-action"><form class="manage-form inquiry-manage" method="post" action="/admin/inquiries/<%=i.id%>"><label><span>Follow-up status</span><select name="status"><option value="new" <%=i.status==='new'?'selected':''%>>New</option><option value="contacted" <%=i.status==='contacted'?'selected':''%>>Contacted</option><option value="closed" <%=i.status==='closed'?'selected':''%>>Closed</option></select></label><label><span>Private notes</span><textarea name="notes" maxlength="2500" rows="3" placeholder="Record calls, next steps or helpful context…"><%=i.notes||''%></textarea></label><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Update</button></form><form method="post" action="/admin/inquiries/<%=i.id%>?_method=DELETE" data-confirm="Delete this inquiry and its notes permanently?"><button class="icon-danger" type="submit" title="Delete inquiry" aria-label="Delete inquiry"><i class="fa-regular fa-trash-can"></i></button></form></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div class="filter-empty" data-filter-empty hidden><i class="fa-solid fa-magnifying-glass"></i><h3>No matching inquiries</h3><p>Try another search term or status.</p></div>
+  <% } else { %><div class="admin-empty"><span><i class="fa-regular fa-envelope-open"></i></span><h2>No inquiries yet</h2><p>Messages submitted through the public contact form will appear here.</p><a class="admin-btn primary" href="/contact" target="_blank" rel="noopener">Open Contact Page</a></div><% } %>
+</section>
+<%- include('../partials/admin-foot') %>

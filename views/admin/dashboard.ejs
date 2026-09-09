@@ -1,0 +1,44 @@
+<%- include('../partials/admin-head',{title}) %>
+<section class="welcome-card">
+  <div><span class="welcome-kicker"><i class="fa-solid fa-sparkles"></i> Welcome back</span><h2><%= currentUser?.name || 'Administrator' %></h2><p>Here is what needs attention across the Gracious website today.</p><div class="welcome-actions"><a class="admin-btn primary" href="/admin/chats"><i class="fa-regular fa-comments"></i> Open Live Chat</a><a class="admin-btn light" href="/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Website</a></div></div>
+  <div class="welcome-illustration" aria-hidden="true"><span><i class="fa-solid fa-leaf"></i></span><i class="fa-regular fa-heart"></i></div>
+</section>
+
+<section class="stat-grid" aria-label="Website overview">
+  <a class="stat-card chat" href="/admin/chats"><div class="stat-icon"><i class="fa-regular fa-comments"></i></div><div class="stat-top"><span>Open chats</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div><strong data-chat-count><%= stats.chats %></strong><p><%= stats.unreadChat ? stats.unreadChat + ' unread ' + (stats.unreadChat === 1 ? 'message' : 'messages') : 'All visitor messages read' %></p><span class="stat-line"><i style="--value:<%= Math.min(100, stats.chats * 10) %>%"></i></span></a>
+  <a class="stat-card review" href="/admin/reviews"><div class="stat-icon"><i class="fa-regular fa-star"></i></div><div class="stat-top"><span>Pending reviews</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div><strong data-review-count><%= stats.reviews %></strong><p><%= stats.reviews ? 'Waiting for moderation' : 'Review queue is clear' %></p><span class="stat-line"><i style="--value:<%= Math.min(100, stats.reviews * 12) %>%"></i></span></a>
+  <a class="stat-card inquiry" href="/admin/inquiries"><div class="stat-icon"><i class="fa-regular fa-envelope-open"></i></div><div class="stat-top"><span>New inquiries</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div><strong data-inquiry-count><%= stats.inquiries %></strong><p><%= stats.inquiries ? 'Families awaiting follow-up' : 'No new inquiries' %></p><span class="stat-line"><i style="--value:<%= Math.min(100, stats.inquiries * 12) %>%"></i></span></a>
+  <a class="stat-card application" href="/admin/applications"><div class="stat-icon"><i class="fa-regular fa-file-lines"></i></div><div class="stat-top"><span>New applications</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div><strong data-application-count><%= stats.applications || 0 %></strong><p><%= stats.applications ? 'Candidates ready for review' : 'Application inbox is clear' %></p><span class="stat-line"><i style="--value:<%= Math.min(100, (stats.applications || 0) * 12) %>%"></i></span></a>
+  <a class="stat-card media" href="/admin/photos"><div class="stat-icon"><i class="fa-regular fa-images"></i></div><div class="stat-top"><span>Active gallery items</span><i class="fa-solid fa-arrow-up-right-from-square"></i></div><strong><%= stats.media %></strong><p>Published photos and videos</p><span class="stat-line"><i style="--value:<%= Math.min(100, stats.media * 5) %>%"></i></span></a>
+</section>
+
+<div class="dashboard-grid">
+  <section class="admin-panel attention-panel">
+    <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-list-check"></i></span><div><h2>Needs your attention</h2><p>Work through the most important items first.</p></div></div></header>
+    <div class="attention-list">
+      <a href="/admin/chats"><span class="attention-icon chat"><i class="fa-regular fa-comment-dots"></i></span><div><strong>Visitor conversations</strong><small><%= stats.chats %> open conversation<%= stats.chats === 1 ? '' : 's' %><%= stats.unreadChat ? ' · ' + stats.unreadChat + ' unread' : '' %></small></div><b><%= stats.unreadChat || stats.chats %></b><i class="fa-solid fa-chevron-right"></i></a>
+      <a href="/admin/inquiries"><span class="attention-icon inquiry"><i class="fa-regular fa-envelope"></i></span><div><strong>Contact inquiries</strong><small>Review details, update status and add follow-up notes.</small></div><b><%= stats.inquiries %></b><i class="fa-solid fa-chevron-right"></i></a>
+      <a href="/admin/applications"><span class="attention-icon application"><i class="fa-regular fa-file-lines"></i></span><div><strong>Job applications</strong><small>Review candidates, résumés and hiring status.</small></div><b><%= stats.applications || 0 %></b><i class="fa-solid fa-chevron-right"></i></a>
+      <a href="/admin/reviews"><span class="attention-icon review"><i class="fa-regular fa-star"></i></span><div><strong>Review moderation</strong><small>Approve or reject submitted feedback before publication.</small></div><b><%= stats.reviews %></b><i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+  </section>
+
+  <section class="admin-panel quick-panel">
+    <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-bolt"></i></span><div><h2>Quick actions</h2><p>Common website tasks in one click.</p></div></div></header>
+    <div class="quick-action-grid">
+      <a href="/admin/heroes#add-hero"><i class="fa-regular fa-window-maximize"></i><span><strong>Manage heroes</strong><small>Add or edit page hero slides</small></span></a>
+      <a href="/admin/photos#add-media"><i class="fa-regular fa-image"></i><span><strong>Add photograph</strong><small>Manage the Photos Gallery</small></span></a>
+      <a href="/admin/videos#add-media"><i class="fa-solid fa-video"></i><span><strong>Add video</strong><small>Manage the Videos Gallery</small></span></a>
+      <a href="/admin/settings"><i class="fa-solid fa-pen-to-square"></i><span><strong>Edit details</strong><small>Update site information</small></span></a>
+      <a href="/admin/reviews"><i class="fa-solid fa-shield-heart"></i><span><strong>Moderate reviews</strong><small>Manage public feedback</small></span></a>
+      <a href="/admin/applications"><i class="fa-regular fa-file-lines"></i><span><strong>Review applicants</strong><small>Manage the hiring inbox</small></span></a>
+      <a href="/contact" target="_blank" rel="noopener"><i class="fa-regular fa-eye"></i><span><strong>Check contact page</strong><small>Preview the public form</small></span></a>
+    </div>
+  </section>
+</div>
+
+<section class="admin-panel website-health">
+  <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-heart-pulse"></i></span><div><h2>Website status</h2><p>Core public experiences currently available.</p></div></div><span class="health-badge"><i></i> Operational</span></header>
+  <div class="health-grid"><article><i class="fa-solid fa-globe"></i><div><strong>Public website</strong><small>Pages and forms available</small></div><span>Live</span></article><article><i class="fa-regular fa-comments"></i><div><strong>Real-time chat</strong><small>Socket connection enabled</small></div><span>Live</span></article><article><i class="fa-regular fa-images"></i><div><strong>Media galleries</strong><small><%= stats.media %> active items</small></div><span>Ready</span></article><article><i class="fa-regular fa-file-lines"></i><div><strong>Application workflow</strong><small>Secure submissions connected</small></div><span>Ready</span></article></div>
+</section>
+<%- include('../partials/admin-foot') %>

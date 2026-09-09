@@ -1,0 +1,44 @@
+<%- include('../partials/head',{title}) %>
+<%- include('../partials/header',{settings}) %>
+<main id="main-content">
+  <%- include('../partials/public-hero') %>
+  <section class="gallery-mode-nav" aria-label="Choose gallery type">
+    <div class="container gallery-mode-nav-inner">
+      <div><span class="eyebrow dark">Explore our community</span><strong>Choose what you would like to view.</strong></div>
+      <div class="gallery-mode-actions" role="group" aria-label="Gallery options">
+        <a class="gallery-mode-btn is-active" href="/gallery" aria-current="page"><i class="fa-regular fa-images"></i><span>Photos Gallery</span></a>
+        <a class="gallery-mode-btn" href="/video-gallery"><i class="fa-solid fa-circle-play"></i><span>Videos Gallery</span></a>
+      </div>
+    </div>
+  </section>
+  <section class="section gallery-section">
+    <div class="container">
+      <div class="gallery-intro reveal"><div><span class="eyebrow dark">Moments &amp; spaces</span><h2>A closer look at life here.</h2></div><div class="gallery-tip"><i class="fa-regular fa-images"></i><span>Select any photograph to view it full screen.</span></div></div>
+      <% if (media.length) { %>
+      <% const legacyStart = media.findIndex(item => String(item.url || '').startsWith('/media/gallery/legacy/')); %>
+      <div class="gallery-grid" id="galleryGrid">
+        <% media.forEach((item,index)=>{ %>
+          <% if (index === legacyStart) { %>
+            </div>
+            <div class="gallery-archive-break reveal"><span class="eyebrow dark">From our archive</span><h3>Grand Opening — July 20, 2024</h3><p>These earlier community photographs are preserved after our newest gallery moments.</p></div>
+            <div class="gallery-grid gallery-grid-archive">
+          <% } %>
+          <button class="gallery-item reveal <%= index % 7 === 0 || index % 7 === 4 ? 'gallery-featured' : '' %>" type="button" data-lightbox data-index="<%= index %>" data-src="<%= item.url %>" data-alt="<%= item.alt || item.title || 'Gracious Senior Living' %>" data-title="<%= item.title || 'Gracious Senior Living' %>" data-caption="<%= item.caption || '' %>" aria-label="Open <%= item.title || 'gallery image' %> full screen">
+            <img loading="lazy" decoding="async" src="<%= item.url %>" alt="<%= item.alt || item.title || 'Gracious Senior Living' %>"><span class="gallery-caption"><span><strong><%= item.title || 'Gracious moment' %></strong><small><%= item.caption || 'View photograph' %></small></span><i class="fa-solid fa-expand"></i></span>
+          </button>
+        <% }) %>
+      </div>
+      <% } else { %><div class="empty-state reveal"><i class="fa-regular fa-images"></i><h2>Our gallery is being prepared.</h2><p>Please return soon or schedule a visit to experience the home in person.</p><a class="btn btn-primary" href="/contact">Schedule a Visit</a></div><% } %>
+      <div class="gallery-video-link reveal"><span><i class="fa-solid fa-circle-play"></i><span><strong>Want to see more?</strong>Visit our video gallery for a closer look at community life.</span></span><a class="text-link" href="/video-gallery">Watch our videos <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+  </section>
+</main>
+<div class="lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Full-size gallery viewer">
+  <div class="lightbox-backdrop" data-lightbox-close></div>
+  <div class="lightbox-dialog">
+    <div class="lightbox-header"><span id="lightboxCount">1 / <%= media.length %></span><button type="button" data-lightbox-close aria-label="Close full-size image"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="lightbox-stage"><button class="lightbox-nav prev" type="button" data-lightbox-prev aria-label="Previous image"><i class="fa-solid fa-chevron-left"></i></button><img id="lightboxImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt=""><button class="lightbox-nav next" type="button" data-lightbox-next aria-label="Next image"><i class="fa-solid fa-chevron-right"></i></button></div>
+    <div class="lightbox-footer"><h2 id="lightboxTitle">Gracious Senior Living</h2><p id="lightboxCaption"></p></div>
+  </div>
+</div>
+<%- include('../partials/footer',{settings}) %>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title><%= title === 'Gracious Senior Living' ? title : title + ' | Gracious Senior Living' %></title>
+  <meta name="description" content="A warm, physician-led senior living community in Wesley Chapel, North Carolina, offering intimate home-style care, private rooms and individualized support.">
+  <meta name="theme-color" content="#123f35">
+  <meta property="og:title" content="<%= title %> | Gracious Senior Living">
+  <meta property="og:description" content="Compassionate support, familiar comforts and genuine belonging in an intimate home-like setting.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/media/brand/gracious-logo.png">
+  <link rel="icon" type="image/png" href="/media/brand/gracious-logo.png">
+  <link rel="apple-touch-icon" href="/media/brand/gracious-logo.png">
+  <link rel="preload" as="image" href="/media/brand/gracious-logo.png" fetchpriority="high">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/site.css">
+  <script>document.documentElement.classList.add('js','is-loading');</script>
+  <noscript><style>.site-preloader{display:none!important}</style></noscript>
+</head>
+<body data-page="<%= currentPath || '/' %>">
+  <div class="site-preloader" id="sitePreloader" role="status" aria-live="polite" aria-label="Loading Gracious Senior Living">
+    <div class="preloader-inner">
+      <div class="preloader-logo-wrap"><span class="preloader-orbit" aria-hidden="true"></span><img src="/media/brand/gracious-logo.png" alt="Gracious Senior Living"></div>
+      <div class="preloader-copy"><strong>Gracious Senior Living</strong><span>Preparing a gracious experience…</span></div>
+      <div class="preloader-progress" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+  <a class="skip-link" href="#main-content">Skip to main content</a>

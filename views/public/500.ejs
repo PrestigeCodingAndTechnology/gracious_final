@@ -1,0 +1,4 @@
+<%- include('../partials/head',{title}) %>
+<%- include('../partials/header',{settings}) %>
+<main id="main-content" class="error-page"><section><div class="container error-layout"><div class="error-code">500<span><i class="fa-solid fa-leaf"></i></span></div><div><span class="eyebrow dark">Something went wrong</span><h1>We’re sorry—this page needs a moment.</h1><p>Our team has been notified. Please try again or return to the homepage while we put things right.</p><div class="actions"><a class="btn btn-primary" href="/"><i class="fa-solid fa-house"></i> Return Home</a><button class="btn btn-outline" type="button" data-reload>Try Again</button></div><% if (typeof error !== 'undefined' && error) { %><details class="error-detail"><summary>Development details</summary><pre><%= error.stack || error.message %></pre></details><% } %></div></div></section></main>
+<%- include('../partials/footer',{settings}) %>

@@ -1,0 +1,39 @@
+{
+  "name": "gracious-senior-living",
+  "version": "6.2.1",
+  "private": true,
+  "type": "module",
+  "description": "Gracious Senior Living premium website, hiring workflow, administration workspace and real-time care chat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node utils/seed.js",
+    "validate:ui": "node scripts/validate-ui.js",
+    "validate:realtime": "node scripts/validate-realtime.js",
+    "validate:application": "node scripts/validate-application.js",
+    "validate:backend": "node scripts/validate-backend.js",
+    "validate": "node scripts/validate-ui.js && node scripts/validate-realtime.js && node scripts/validate-application.js && node scripts/validate-backend.js"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.17.1",
+    "multer": "^2.0.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "css-tree": "^3.2.1",
+    "html-validate": "^10.17.0"
+  }
+}

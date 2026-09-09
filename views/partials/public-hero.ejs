@@ -1,0 +1,50 @@
+<% const heroSlides = typeof heroes !== 'undefined' && Array.isArray(heroes) ? heroes : []; %>
+<% const managedHeroPage = typeof heroPage !== 'undefined' ? heroPage : ''; %>
+<% const managedBreadcrumbs = typeof heroBreadcrumbs !== 'undefined' && Array.isArray(heroBreadcrumbs) ? heroBreadcrumbs : []; %>
+<% if (managedHeroPage === 'home') { %>
+  <% if (heroSlides.length) { %>
+  <section class="hero-slider" data-hero-slider aria-label="Welcome to Gracious Senior Living">
+    <% heroSlides.forEach((slide, index) => { %>
+      <article class="hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--hero-image:url('<%= slide.imageUrl %>');--hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+        <div class="container hero-content">
+          <% if (slide.eyebrow) { %><span class="hero-kicker"><% if (slide.icon) { %><i class="fa-solid <%= slide.icon %>"></i><% } %> <%= slide.eyebrow %></span><% } %>
+          <<%= index === 0 ? 'h1' : 'h2' %>><%= slide.title %></<%= index === 0 ? 'h1' : 'h2' %>>
+          <% if (slide.text) { %><p><%= slide.text %></p><% } %>
+          <% if (slide.primaryLabel || slide.secondaryLabel) { %><div class="actions">
+            <% if (slide.primaryLabel && slide.primaryHref) { %><a class="btn btn-gold" href="<%= slide.primaryHref %>"><%= slide.primaryLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %>
+            <% if (slide.secondaryLabel && slide.secondaryHref) { %><a class="btn btn-ghost" href="<%= slide.secondaryHref %>"><%= slide.secondaryLabel %></a><% } %>
+          </div><% } %>
+        </div>
+      </article>
+    <% }) %>
+    <% if (heroSlides.length > 1) { %><div class="hero-controls container">
+      <button class="hero-arrow prev" type="button" aria-label="Previous slide"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="hero-dots" role="tablist" aria-label="Choose a welcome slide"></div>
+      <button class="hero-arrow next" type="button" aria-label="Next slide"><i class="fa-solid fa-arrow-right"></i></button>
+      <span class="hero-progress"><i></i></span>
+    </div><% } %>
+  </section>
+  <% } %>
+<% } else if (heroSlides.length) { %>
+  <section class="page-hero managed-page-hero <%= managedHeroPage %>-hero <%= heroSlides.length > 1 ? 'has-hero-slides' : '' %>" data-page-hero-slider aria-label="<%= heroSlides[0]?.eyebrow || title %>">
+    <% heroSlides.forEach((slide, index) => { %>
+      <article class="page-hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--page-hero-image:url('<%= slide.imageUrl %>');--page-hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+        <div class="container page-hero-content">
+          <% if (slide.eyebrow) { %><span class="eyebrow"><% if (slide.icon) { %><i class="fa-solid <%= slide.icon %>"></i> <% } %><%= slide.eyebrow %></span><% } %>
+          <h1><%= slide.title %></h1>
+          <% if (slide.text) { %><p><%= slide.text %></p><% } %>
+          <% if (slide.primaryLabel || slide.secondaryLabel) { %><div class="actions page-hero-actions">
+            <% if (slide.primaryLabel && slide.primaryHref) { %><a class="btn btn-gold" href="<%= slide.primaryHref %>"><%= slide.primaryLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %>
+            <% if (slide.secondaryLabel && slide.secondaryHref) { %><a class="btn btn-ghost" href="<%= slide.secondaryHref %>"><%= slide.secondaryLabel %></a><% } %>
+          </div><% } %>
+          <% if (managedBreadcrumbs.length) { %><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><% managedBreadcrumbs.forEach((crumb) => { %><i class="fa-solid fa-chevron-right"></i><% if (crumb.href) { %><a href="<%= crumb.href %>"><%= crumb.label %></a><% } else { %><span><%= crumb.label %></span><% } %><% }) %></nav><% } %>
+        </div>
+      </article>
+    <% }) %>
+    <% if (heroSlides.length > 1) { %><div class="page-hero-controls container" aria-label="Hero slide controls">
+      <button class="page-hero-arrow prev" type="button" aria-label="Previous hero slide"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="page-hero-dots" role="tablist" aria-label="Choose hero slide"></div>
+      <button class="page-hero-arrow next" type="button" aria-label="Next hero slide"><i class="fa-solid fa-arrow-right"></i></button>
+    </div><% } %>
+  </section>
+<% } %>

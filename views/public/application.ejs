@@ -1,0 +1,158 @@
+<%- include('../partials/head',{title}) %>
+<%- include('../partials/header',{settings}) %>
+<% const val = value => value == null ? '' : String(value); %>
+<% const row = (collection, index) => collection && collection[index] ? collection[index] : {}; %>
+<main id="main-content">
+  <%- include('../partials/public-hero') %>
+
+  <section class="career-welcome section">
+    <div class="container career-welcome-grid">
+      <div class="career-copy reveal">
+        <span class="eyebrow dark">Work with purpose</span>
+        <h2>Your care can make an everyday difference.</h2>
+        <p class="lead">We welcome dependable, compassionate professionals who believe older adults deserve patience, dignity and the comfort of being truly known.</p>
+        <div class="career-benefits">
+          <article><i class="fa-solid fa-people-roof"></i><div><h3>Close-knit team</h3><p>Work in an intimate residence where communication and relationships matter.</p></div></article>
+          <article><i class="fa-solid fa-heart-circle-check"></i><div><h3>Purposeful work</h3><p>Support residents through personal care, companionship and reassuring daily routines.</p></div></article>
+          <article><i class="fa-solid fa-seedling"></i><div><h3>Room to contribute</h3><p>Bring your experience, ideas and caring presence to a team that values both.</p></div></article>
+        </div>
+      </div>
+      <div class="career-photo reveal"><img src="/media/gallery/g11.jpeg" alt="Smiling woman resident at Gracious Senior Living"><span><i class="fa-solid fa-heart"></i> Compassion lives in the details.</span></div>
+    </div>
+  </section>
+
+  <section class="application-section" id="application-form">
+    <div class="container application-layout">
+      <aside class="application-aside reveal">
+        <span class="eyebrow">Before you begin</span>
+        <h2>Employment application</h2>
+        <p>This secure online form follows the Gracious Senior Living employment application and usually takes 10–15 minutes.</p>
+        <ul>
+          <li><i class="fa-solid fa-check"></i> Have education and work-history dates ready.</li>
+          <li><i class="fa-solid fa-check"></i> Prepare contact details for two references.</li>
+          <li><i class="fa-solid fa-check"></i> A résumé is helpful, but optional.</li>
+          <li><i class="fa-solid fa-shield-halved"></i> We do not request your Social Security number online.</li>
+        </ul>
+        <div class="application-help"><i class="fa-solid fa-headset"></i><div><small>Need assistance?</small><a href="tel:<%= (settings.phone || '704-218-2424').replace(/[^0-9+]/g,'') %>"><%= settings.phone || '704-218-2424' %></a></div></div>
+      </aside>
+
+      <div class="application-panel reveal">
+        <% if (submitted) { %>
+          <section class="application-success" role="status">
+            <span class="success-icon"><i class="fa-solid fa-check"></i></span>
+            <span class="eyebrow dark">Application received</span>
+            <h2>Thank you for applying.</h2>
+            <p>Your application has been delivered to the Gracious Senior Living team for review.</p>
+            <% if (submitted !== 'received') { %><div class="application-reference"><small>Your reference number</small><strong><%= submitted %></strong><button type="button" data-copy-reference="<%= submitted %>"><i class="fa-regular fa-copy"></i> Copy</button></div><% } %>
+            <div class="success-next"><h3>What happens next?</h3><ol><li><span>1</span>Our team reviews your experience and availability.</li><li><span>2</span>Selected candidates are contacted using the email or phone provided.</li><li><span>3</span>Employment eligibility and any additional documents are verified later in the hiring process.</li></ol></div>
+            <div class="actions"><a class="btn btn-primary" href="/">Return Home</a><a class="btn btn-outline" href="/contact">Contact Our Team</a></div>
+          </section>
+        <% } else { %>
+          <% if (validationErrors.length) { %>
+            <div class="form-error-summary" role="alert" tabindex="-1" data-error-summary>
+              <div><i class="fa-solid fa-circle-exclamation"></i><span><strong>Please review your application.</strong><small><%= validationErrors.length %> item<%= validationErrors.length === 1 ? '' : 's' %> need attention.</small></span></div>
+              <ul><% validationErrors.forEach(item => { %><li><a href="#field-<%= item.field %>"><%= item.message %></a></li><% }) %></ul>
+            </div>
+          <% } %>
+
+          <div class="application-heading">
+            <div><span class="eyebrow dark">Gracious Senior Living</span><h2>Employment / Job Application</h2></div>
+            <span class="application-secure"><i class="fa-solid fa-lock"></i> Secure submission</span>
+          </div>
+
+          <nav class="application-progress" aria-label="Application sections">
+            <% ['Personal','Eligibility','Education','Employment','References','Service','Certify'].forEach((label,index) => { %>
+              <button class="<%= index === 0 ? 'active' : '' %>" type="button" data-step-target="<%= index %>" aria-current="<%= index === 0 ? 'step' : 'false' %>"><span><%= index + 1 %></span><small><%= label %></small></button>
+            <% }) %>
+          </nav>
+
+          <form class="application-form public-form" method="post" action="/apply" enctype="multipart/form-data" data-application-form novalidate>
+            <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+
+            <section class="application-step is-active" data-app-step="0" aria-labelledby="step-personal-title">
+              <div class="step-heading"><span>01</span><div><h3 id="step-personal-title">Personal information</h3><p>Tell us how to contact you and what role you are seeking.</p></div></div>
+              <div class="form-grid two">
+                <label class="span-2" id="field-fullName"><span>Full legal name *</span><input name="fullName" value="<%= val(form.fullName) %>" required maxlength="140" autocomplete="name" placeholder="First, middle and last name"></label>
+                <label class="span-2" id="field-address"><span>Current street address *</span><input name="address" value="<%= val(form.address) %>" required maxlength="200" autocomplete="address-line1" placeholder="Street address and apartment, if applicable"></label>
+                <label id="field-city"><span>City *</span><input name="city" value="<%= val(form.city) %>" required maxlength="80" autocomplete="address-level2"></label>
+                <label id="field-state"><span>State *</span><input name="state" value="<%= val(form.state) %>" required maxlength="50" autocomplete="address-level1"></label>
+                <label id="field-zip"><span>ZIP code *</span><input name="zip" value="<%= val(form.zip) %>" required maxlength="20" autocomplete="postal-code" inputmode="numeric"></label>
+                <label id="field-phone"><span>Phone number *</span><input type="tel" name="phone" value="<%= val(form.phone) %>" required maxlength="40" autocomplete="tel" placeholder="(000) 000-0000"></label>
+                <label class="span-2" id="field-email"><span>Email address *</span><input type="email" name="email" value="<%= val(form.email) %>" required maxlength="160" autocomplete="email" placeholder="you@example.com"></label>
+                <label id="field-dateAvailable"><span>Date available *</span><input type="date" name="dateAvailable" value="<%= val(form.dateAvailable) %>" required></label>
+                <label id="field-position"><span>Position applied for *</span><input name="position" value="<%= val(form.position) %>" required maxlength="120" placeholder="e.g. Caregiver, CNA, Cook"></label>
+                <label><span>Desired pay</span><span class="money-input"><i>$</i><input name="desiredPay" value="<%= val(form.desiredPay) %>" maxlength="40" inputmode="decimal" placeholder="Amount"></span></label>
+                <fieldset class="choice-field"><legend>Pay basis</legend><div class="compact-choices"><label><input type="radio" name="desiredPayType" value="hourly" <%= form.desiredPayType === 'hourly' ? 'checked' : '' %>><span>Hourly</span></label><label><input type="radio" name="desiredPayType" value="salary" <%= form.desiredPayType === 'salary' ? 'checked' : '' %>><span>Salary</span></label></div></fieldset>
+              </div>
+              <fieldset class="choice-field full" id="field-employmentType"><legend>Employment desired *</legend><div class="choice-grid three"><label><input required type="radio" name="employmentType" value="full-time" <%= form.employmentType === 'full-time' ? 'checked' : '' %>><span><i class="fa-solid fa-briefcase"></i><strong>Full-time</strong></span></label><label><input required type="radio" name="employmentType" value="part-time" <%= form.employmentType === 'part-time' ? 'checked' : '' %>><span><i class="fa-regular fa-clock"></i><strong>Part-time</strong></span></label><label><input required type="radio" name="employmentType" value="seasonal" <%= form.employmentType === 'seasonal' ? 'checked' : '' %>><span><i class="fa-regular fa-calendar"></i><strong>Seasonal</strong></span></label></div></fieldset>
+              <div class="step-actions"><span></span><button class="btn btn-primary" type="button" data-step-next>Continue to eligibility <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="1" aria-labelledby="step-eligibility-title">
+              <div class="step-heading"><span>02</span><div><h3 id="step-eligibility-title">Employment eligibility</h3><p>Please answer each question accurately.</p></div></div>
+              <div class="question-stack">
+                <fieldset class="question-card" id="field-usCitizen"><legend>Are you a U.S. citizen? *</legend><div class="yes-no"><label><input required type="radio" name="usCitizen" value="yes" <%= form.usCitizen === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input required type="radio" name="usCitizen" value="no" <%= form.usCitizen === 'no' ? 'checked' : '' %>><span>No</span></label></div></fieldset>
+                <fieldset class="question-card conditional-field" id="field-allowedToWork" data-condition="usCitizen:no"><legend>If no, are you authorized to work in the United States?</legend><div class="yes-no"><label><input type="radio" name="allowedToWork" value="yes" <%= form.allowedToWork === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input type="radio" name="allowedToWork" value="no" <%= form.allowedToWork === 'no' ? 'checked' : '' %>><span>No</span></label></div></fieldset>
+                <fieldset class="question-card" id="field-previouslyWorked"><legend>Have you ever worked for Gracious Senior Living? *</legend><div class="yes-no"><label><input required type="radio" name="previouslyWorked" value="yes" <%= form.previouslyWorked === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input required type="radio" name="previouslyWorked" value="no" <%= form.previouslyWorked === 'no' ? 'checked' : '' %>><span>No</span></label></div><label class="conditional-field" id="field-priorEmploymentDates" data-condition="previouslyWorked:yes"><span>Previous start and end dates</span><input name="priorEmploymentDates" value="<%= val(form.priorEmploymentDates) %>" maxlength="160" placeholder="Example: May 2023 – January 2025"></label></fieldset>
+                <fieldset class="question-card" id="field-felonyConviction"><legend>Have you ever been convicted of a felony? *</legend><div class="yes-no"><label><input required type="radio" name="felonyConviction" value="yes" <%= form.felonyConviction === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input required type="radio" name="felonyConviction" value="no" <%= form.felonyConviction === 'no' ? 'checked' : '' %>><span>No</span></label></div><label class="conditional-field" id="field-felonyExplanation" data-condition="felonyConviction:yes"><span>Please explain</span><textarea name="felonyExplanation" maxlength="1200" rows="4" placeholder="Provide relevant details"><%= val(form.felonyExplanation) %></textarea></label></fieldset>
+              </div>
+              <div class="privacy-callout"><i class="fa-solid fa-user-shield"></i><div><strong>Your Social Security number is not collected online.</strong><p>If required, it will be requested later through an appropriate secure hiring process.</p></div></div>
+              <div class="step-actions"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-primary" type="button" data-step-next>Continue to education <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="2" aria-labelledby="step-education-title">
+              <div class="step-heading"><span>03</span><div><h3 id="step-education-title">Education</h3><p>List your education and relevant training.</p></div></div>
+              <% const educationLabels = [['High school','Diploma'],['College','Degree'],['Other education or training','Degree / certificate']]; %>
+              <div class="repeat-stack">
+                <% educationLabels.forEach((labels,index) => { const item = row(form.education,index); %>
+                  <fieldset class="repeat-card"><legend><span><%= index + 1 %></span><%= labels[0] %></legend><input type="hidden" name="education[<%= index %>][level]" value="<%= labels[0] %>"><div class="form-grid two"><label class="span-2"><span>School or institution</span><input name="education[<%= index %>][school]" value="<%= val(item.school) %>" maxlength="160"></label><label class="span-2"><span>City / State</span><input name="education[<%= index %>][cityState]" value="<%= val(item.cityState) %>" maxlength="120"></label><label><span>From</span><input name="education[<%= index %>][from]" value="<%= val(item.from) %>" maxlength="30" placeholder="MM/YYYY"></label><label><span>To</span><input name="education[<%= index %>][to]" value="<%= val(item.to) %>" maxlength="30" placeholder="MM/YYYY"></label><fieldset class="choice-field"><legend>Graduated?</legend><div class="compact-choices"><label><input type="radio" name="education[<%= index %>][graduated]" value="yes" <%= item.graduated === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input type="radio" name="education[<%= index %>][graduated]" value="no" <%= item.graduated === 'no' ? 'checked' : '' %>><span>No</span></label></div></fieldset><label><span><%= labels[1] %></span><input name="education[<%= index %>][credential]" value="<%= val(item.credential) %>" maxlength="120"></label></div></fieldset>
+                <% }) %>
+              </div>
+              <div class="step-actions"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-primary" type="button" data-step-next>Continue to work history <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="3" aria-labelledby="step-employment-title">
+              <div class="step-heading"><span>04</span><div><h3 id="step-employment-title">Employment history</h3><p>Begin with your most recent employer.</p></div></div>
+              <div class="repeat-stack">
+                <% [0,1].forEach(index => { const item = row(form.employmentHistory,index); %>
+                  <fieldset class="repeat-card"><legend><span><%= index + 1 %></span>Employer <%= index + 1 %></legend><div class="form-grid two"><label class="span-2"><span>Employer name</span><input name="employmentHistory[<%= index %>][employer]" value="<%= val(item.employer) %>" maxlength="160"></label><label><span>Email</span><input type="email" name="employmentHistory[<%= index %>][email]" value="<%= val(item.email) %>" maxlength="160"></label><label><span>Phone</span><input type="tel" name="employmentHistory[<%= index %>][phone]" value="<%= val(item.phone) %>" maxlength="40"></label><label class="span-2"><span>Street address</span><input name="employmentHistory[<%= index %>][address]" value="<%= val(item.address) %>" maxlength="200"></label><label><span>City</span><input name="employmentHistory[<%= index %>][city]" value="<%= val(item.city) %>" maxlength="80"></label><label><span>State</span><input name="employmentHistory[<%= index %>][state]" value="<%= val(item.state) %>" maxlength="50"></label><label><span>ZIP</span><input name="employmentHistory[<%= index %>][zip]" value="<%= val(item.zip) %>" maxlength="20"></label><label><span>Job title</span><input name="employmentHistory[<%= index %>][jobTitle]" value="<%= val(item.jobTitle) %>" maxlength="120"></label><label><span>Starting date</span><input name="employmentHistory[<%= index %>][startDate]" value="<%= val(item.startDate) %>" maxlength="30" placeholder="MM/YYYY"></label><label><span>Ending date</span><input name="employmentHistory[<%= index %>][endDate]" value="<%= val(item.endDate) %>" maxlength="30" placeholder="MM/YYYY or Present"></label><label><span>Starting pay</span><input name="employmentHistory[<%= index %>][startingPay]" value="<%= val(item.startingPay) %>" maxlength="40"></label><label><span>Ending pay</span><input name="employmentHistory[<%= index %>][endingPay]" value="<%= val(item.endingPay) %>" maxlength="40"></label><label class="span-2"><span>Responsibilities</span><textarea name="employmentHistory[<%= index %>][responsibilities]" maxlength="1200" rows="4"><%= val(item.responsibilities) %></textarea></label><label class="span-2"><span>Reason for leaving</span><input name="employmentHistory[<%= index %>][reasonForLeaving]" value="<%= val(item.reasonForLeaving) %>" maxlength="500"></label></div></fieldset>
+                <% }) %>
+              </div>
+              <div class="step-actions"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-primary" type="button" data-step-next>Continue to references <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="4" aria-labelledby="step-references-title">
+              <div class="step-heading"><span>05</span><div><h3 id="step-references-title">Professional references</h3><p>Provide people who can speak about your work, reliability or character.</p></div></div>
+              <div class="repeat-stack" id="field-references">
+                <% [0,1].forEach(index => { const item = row(form.references,index); %>
+                  <fieldset class="repeat-card"><legend><span><%= index + 1 %></span>Reference <%= index + 1 %></legend><div class="form-grid two"><label><span>Full name <%= index === 0 ? '*' : '' %></span><input name="references[<%= index %>][name]" value="<%= val(item.name) %>" maxlength="120" <%= index === 0 ? 'required' : '' %>></label><label><span>Relationship</span><input name="references[<%= index %>][relationship]" value="<%= val(item.relationship) %>" maxlength="80"></label><label><span>Company</span><input name="references[<%= index %>][company]" value="<%= val(item.company) %>" maxlength="140"></label><label><span>Title</span><input name="references[<%= index %>][title]" value="<%= val(item.title) %>" maxlength="100"></label><label><span>Email</span><input type="email" name="references[<%= index %>][email]" value="<%= val(item.email) %>" maxlength="160"></label><label><span>Phone <%= index === 0 ? '*' : '' %></span><input type="tel" name="references[<%= index %>][phone]" value="<%= val(item.phone) %>" maxlength="40" <%= index === 0 ? 'required' : '' %>></label></div></fieldset>
+                <% }) %>
+              </div>
+              <div class="step-actions"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-primary" type="button" data-step-next>Continue to screening <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="5" aria-labelledby="step-service-title">
+              <div class="step-heading"><span>06</span><div><h3 id="step-service-title">Military service &amp; screening</h3><p>Complete the final eligibility questions.</p></div></div>
+              <fieldset class="question-card" id="field-veteran"><legend>Are you a veteran? *</legend><div class="yes-no"><label><input required type="radio" name="veteran" value="yes" <%= form.veteran === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input required type="radio" name="veteran" value="no" <%= form.veteran === 'no' ? 'checked' : '' %>><span>No</span></label></div></fieldset>
+              <div class="conditional-field military-fields" data-condition="veteran:yes"><div class="form-grid two"><label id="field-militaryBranch"><span>Branch</span><input name="militaryBranch" value="<%= val(form.militaryBranch) %>" maxlength="100"></label><label><span>Rank at discharge</span><input name="rankAtDischarge" value="<%= val(form.rankAtDischarge) %>" maxlength="100"></label><label><span>Starting date</span><input name="militaryStartDate" value="<%= val(form.militaryStartDate) %>" maxlength="30"></label><label><span>Ending date</span><input name="militaryEndDate" value="<%= val(form.militaryEndDate) %>" maxlength="30"></label><label class="span-2"><span>Type of discharge</span><input name="dischargeType" value="<%= val(form.dischargeType) %>" maxlength="100"></label><label class="span-2"><span>If not honorable, please explain</span><textarea name="dischargeExplanation" maxlength="1000" rows="4"><%= val(form.dischargeExplanation) %></textarea></label></div></div>
+              <fieldset class="question-card screening-question" id="field-backgroundCheckConsent"><legend>If asked, are you willing to consent to a background check? *</legend><p>Any screening will be handled in accordance with applicable law and only as part of the hiring process.</p><div class="yes-no"><label><input required type="radio" name="backgroundCheckConsent" value="yes" <%= form.backgroundCheckConsent === 'yes' ? 'checked' : '' %>><span>Yes</span></label><label><input required type="radio" name="backgroundCheckConsent" value="no" <%= form.backgroundCheckConsent === 'no' ? 'checked' : '' %>><span>No</span></label></div></fieldset>
+              <div class="step-actions"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-primary" type="button" data-step-next>Review and certify <i class="fa-solid fa-arrow-right"></i></button></div>
+            </section>
+
+            <section class="application-step" data-app-step="6" aria-labelledby="step-certify-title">
+              <div class="step-heading"><span>07</span><div><h3 id="step-certify-title">Review &amp; certify</h3><p>Read the certification, add your signature and submit.</p></div></div>
+              <div class="equal-opportunity"><i class="fa-solid fa-scale-balanced"></i><div><strong>Equal Opportunity Employer</strong><p>Gracious Senior Living considers qualified applicants without unlawful discrimination and is committed to a respectful workplace.</p></div></div>
+              <div class="certification-copy"><h4>Applicant certification</h4><p>I certify that the information in this application is true, complete and honest to the best of my knowledge. I understand that false or misleading information may affect consideration for employment or may result in termination if employment has begun.</p><p>I authorize Gracious Senior Living to verify relevant statements in this application and contact the references provided, subject to applicable law. I understand that submitting this application does not create an employment contract or guarantee employment.</p></div>
+              <label class="consent-check" id="field-certificationAccepted"><input required type="checkbox" name="certificationAccepted" <%= form.certificationAccepted === 'on' ? 'checked' : '' %>><span><i class="fa-solid fa-check"></i></span><strong>I have read and accept the applicant certification. *</strong></label>
+              <div class="form-grid two signature-grid"><label id="field-signature"><span>Electronic signature — type your full legal name *</span><input required name="signature" value="<%= val(form.signature) %>" maxlength="140" autocomplete="name" placeholder="Your full legal name"><small>Typing your name serves as your electronic signature.</small></label><label id="field-signatureDate"><span>Date *</span><input required type="date" name="signatureDate" value="<%= val(form.signatureDate) %>"></label></div>
+              <label class="file-upload" id="field-resume"><input type="file" name="resume" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-application-file><span class="file-icon"><i class="fa-solid fa-file-arrow-up"></i></span><span><strong>Attach your résumé <em>Optional</em></strong><small data-file-name>PDF, DOC or DOCX — maximum 5 MB</small></span><b>Choose file</b></label>
+              <div class="submission-notice"><i class="fa-solid fa-lock"></i><span><strong>Your application is submitted securely.</strong><small>Only authorized Gracious administrators can review it.</small></span></div>
+              <div class="step-actions final"><button class="btn btn-outline" type="button" data-step-prev><i class="fa-solid fa-arrow-left"></i> Back</button><button class="btn btn-gold submit-btn" type="submit"><span>Submit Application</span><i class="fa-solid fa-paper-plane"></i></button></div>
+            </section>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </section>
+</main>
+<%- include('../partials/footer',{settings}) %>

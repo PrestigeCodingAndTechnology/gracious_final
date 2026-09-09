@@ -1,0 +1,29 @@
+<%- include('../partials/admin-head',{title}) %>
+<section class="admin-toolbar">
+  <div class="toolbar-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Search reviewer or review text…" aria-label="Search reviews" data-list-search="reviewsList"></div>
+  <div class="toolbar-filter"><i class="fa-solid fa-filter"></i><select aria-label="Filter reviews by status" data-list-status="reviewsList"><option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
+  <span class="toolbar-count"><strong><%= reviews.length %></strong> total <%= reviews.length === 1 ? 'review' : 'reviews' %></span>
+</section>
+
+<section class="admin-panel table-panel" id="reviewsList" data-filter-list>
+  <header class="panel-heading compact"><div><span class="panel-icon"><i class="fa-regular fa-star"></i></span><div><h2>Review moderation</h2><p>Only approved reviews are visible on the public website.</p></div></div><a class="admin-btn subtle" href="/reviews" target="_blank" rel="noopener"><i class="fa-regular fa-eye"></i> Public reviews</a></header>
+  <% if (reviews.length) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table review-table">
+      <thead><tr><th>Reviewer</th><th>Review</th><th>Public status</th><th>Moderation</th></tr></thead>
+      <tbody>
+        <% reviews.forEach(r=>{ %>
+        <tr data-filter-item data-status="<%= r.status %>" data-search="<%= (r.name + ' ' + (r.relationship || '') + ' ' + r.message).toLowerCase() %>">
+          <td><div class="person-cell"><span class="table-avatar"><%= r.name.charAt(0).toUpperCase() %></span><div><strong><%= r.name %></strong><small><%= r.relationship || 'Relationship not provided' %></small><time><i class="fa-regular fa-clock"></i> <%= new Date(r.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) %></time></div></div></td>
+          <td class="review-content"><div class="stars"><%= '★'.repeat(r.rating) %><span><%= '★'.repeat(5-r.rating) %></span></div><p><%= r.message %></p></td>
+          <td><span class="status-badge <%= r.status %>"><i></i><%= r.status %></span><% if(r.status === 'approved' && r.approvedAt){ %><small class="approval-time">Published <%= new Date(r.approvedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) %></small><% } %></td>
+          <td class="action-cell"><form class="manage-form" method="post" action="/admin/reviews/<%=r.id%>/status"><label><span>Status</span><select name="status"><option value="pending" <%=r.status==='pending'?'selected':''%>>Pending</option><option value="approved" <%=r.status==='approved'?'selected':''%>>Approved</option><option value="rejected" <%=r.status==='rejected'?'selected':''%>>Rejected</option></select></label><small class="moderation-help">Approved reviews publish automatically, newest approval first.</small><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-check"></i> Save</button></form><form method="post" action="/admin/reviews/<%=r.id%>?_method=DELETE" data-confirm="Delete this review permanently?"><button class="icon-danger" type="submit" title="Delete review" aria-label="Delete review"><i class="fa-regular fa-trash-can"></i></button></form></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div class="filter-empty" data-filter-empty hidden><i class="fa-solid fa-magnifying-glass"></i><h3>No matching reviews</h3><p>Try another search term or status.</p></div>
+  <% } else { %><div class="admin-empty"><span><i class="fa-regular fa-star"></i></span><h2>No reviews yet</h2><p>Family reviews submitted on the public website will appear here for moderation.</p><a class="admin-btn primary" href="/reviews" target="_blank" rel="noopener">Open Review Page</a></div><% } %>
+</section>
+<%- include('../partials/admin-foot') %>
