@@ -1,0 +1,32 @@
+/* Managed inner-page hero alignment fix.
+   Keeps all non-home hero text aligned with the site's standard content container. */
+.managed-page-hero .page-hero-slide {
+  align-items: center;
+}
+
+.managed-page-hero .page-hero-slide .page-hero-content {
+  width: min(1220px, calc(100% - 56px));
+  margin-inline: auto;
+  padding: 68px 0 74px;
+}
+
+.managed-page-hero .page-hero-content h1 {
+  max-width: 820px;
+}
+
+.managed-page-hero .page-hero-content p {
+  max-width: 680px;
+}
+
+@media (max-width: 680px) {
+  .managed-page-hero .page-hero-slide .page-hero-content {
+    width: calc(100% - 36px);
+    padding: 56px 0 64px;
+  }
+}
+
+@media (max-width: 420px) {
+  .managed-page-hero .page-hero-slide .page-hero-content {
+    width: calc(100% - 28px);
+  }
+}
