@@ -1,7 +1,7 @@
 <% const visibleImages = (section.images || []).filter(image => image.visible !== false); %>
 <% if (section.template === 'split-left' || section.template === 'split-right') { %>
 <section class="section <%= section.seedKey === 'about-team' ? 'team-section' : '' %>" <%= section.seedKey === 'care-specialized' ? 'id="specialized-care"' : '' %>>
-  <div class="container split split-feature <%= section.template === 'split-right' ? 'reverse-mobile' : '' %>">
+  <div class="container split split-feature <%= section.template === 'split-right' ? 'reverse-mobile' : '' %>" <%- visibleImages.length ? '' : 'style="grid-template-columns:minmax(0,900px);justify-content:center"' %>>
     <% if (section.template === 'split-left' && visibleImages[0]) { %>
       <div class="image-composition <%= section.seedKey === 'care-specialized' ? 'care-detail-image' : '' %> reveal">
         <img class="image-main" src="<%= visibleImages[0].url %>" alt="<%= visibleImages[0].alt || section.title %>">
@@ -28,7 +28,7 @@
 </section>
 <% } else if (section.template === 'dark-gallery') { %>
 <section class="section home-life-section">
-  <div class="container home-life-grid">
+  <div class="container home-life-grid" <%- visibleImages.length ? '' : 'style="grid-template-columns:minmax(0,900px);justify-content:center"' %>>
     <div class="home-life-copy reveal"><% if(section.eyebrow){ %><span class="eyebrow"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.body){ %><p><%= section.body %></p><% } %>
       <% if ((section.items || []).length) { %><div class="mini-features"><% section.items.forEach(item => { %><span><i class="fa-solid <%= item.icon || 'fa-circle-check' %>"></i> <%= item.title %></span><% }) %></div><% } %>
       <% if(section.buttonLabel && section.buttonHref){ %><a class="btn btn-light" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %>
@@ -42,7 +42,7 @@
   <div class="container visit-cta-content reveal"><% if(section.eyebrow){ %><span class="eyebrow"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.body){ %><p><%= section.body %></p><% } %><div class="actions"><% if(section.buttonLabel && section.buttonHref){ %><a class="btn btn-gold" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %><a class="btn btn-ghost" href="tel:<%= (settings.phone || '704-218-2424').replace(/[^0-9+]/g,'') %>"><i class="fa-solid fa-phone"></i> Call <%= settings.phone || '704-218-2424' %></a></div></div>
 </section>
 <% } else if (section.template === 'collage-left') { %>
-<section class="section"><div class="container split split-feature">
+<section class="section"><div class="container split split-feature" <%- visibleImages.length ? '' : 'style="grid-template-columns:minmax(0,900px);justify-content:center"' %>>
   <% if(visibleImages.length){ %><div class="living-collage reveal"><% visibleImages.forEach((image,index) => { %><img class="<%= index === 0 ? 'living-large' : 'living-small' %>" src="<%= image.url %>" alt="<%= image.alt || section.title %>"><% }) %><% if(section.noteText){ %><span class="living-caption"><i class="fa-solid fa-sun"></i> <%= section.noteText %></span><% } %></div><% } %>
   <div class="section-copy reveal"><% if(section.eyebrow){ %><span class="eyebrow dark"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.lead){ %><p class="lead"><%= section.lead %></p><% } %><% if(section.body){ %><p><%= section.body %></p><% } %><% if((section.items || []).length){ %><ul class="check-list"><% section.items.forEach(item => { %><li><i class="fa-solid fa-check"></i> <%= item.title %></li><% }) %></ul><% } %></div>
 </div></section>
