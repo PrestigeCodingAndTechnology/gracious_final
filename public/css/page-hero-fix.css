@@ -1,0 +1,105 @@
+/* Managed inner-page hero alignment and vertical spacing.
+   Keeps non-home hero copy aligned with the site's standard content container,
+   preserves the About hero treatment, and gives longer inner-page heroes enough
+   vertical room so breadcrumbs and copy never sit against or clip at the bottom. */
+.managed-page-hero .page-hero-slide {
+  align-items: center;
+}
+
+.managed-page-hero .page-hero-slide .page-hero-content {
+  width: min(1220px, calc(100% - 56px));
+  margin-inline: auto;
+  padding: 68px 0 74px;
+}
+
+.managed-page-hero .page-hero-content h1 {
+  max-width: 820px;
+}
+
+.managed-page-hero .page-hero-content p {
+  max-width: 680px;
+}
+
+/* All managed inner pages except About need a little more vertical breathing room.
+   The content container stretches to the hero height so bottom spacing is always
+   preserved even when a large heading wraps onto multiple lines. */
+.managed-page-hero:not(.about-hero) {
+  min-height: 600px;
+}
+
+.managed-page-hero:not(.about-hero) .page-hero-slide .page-hero-content {
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 88px 0 112px;
+}
+
+/* The application/careers hero has the longest heading and must never be clipped. */
+.managed-page-hero.application-hero {
+  min-height: 680px;
+}
+
+.managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+  min-height: 680px;
+  padding-top: 96px;
+  padding-bottom: 132px;
+}
+
+@media (max-width: 900px) {
+  .managed-page-hero:not(.about-hero) {
+    min-height: 560px;
+  }
+
+  .managed-page-hero:not(.about-hero) .page-hero-slide .page-hero-content {
+    min-height: 560px;
+    padding: 76px 0 98px;
+  }
+
+  .managed-page-hero.application-hero,
+  .managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+    min-height: 630px;
+  }
+
+  .managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+    padding-top: 82px;
+    padding-bottom: 112px;
+  }
+}
+
+@media (max-width: 680px) {
+  .managed-page-hero .page-hero-slide .page-hero-content {
+    width: calc(100% - 36px);
+    padding: 56px 0 64px;
+  }
+
+  .managed-page-hero:not(.about-hero) {
+    min-height: 520px;
+  }
+
+  .managed-page-hero:not(.about-hero) .page-hero-slide .page-hero-content {
+    min-height: 520px;
+    padding: 62px 0 86px;
+  }
+
+  .managed-page-hero.application-hero,
+  .managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+    min-height: 600px;
+  }
+
+  .managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+    padding-top: 68px;
+    padding-bottom: 100px;
+  }
+}
+
+@media (max-width: 420px) {
+  .managed-page-hero .page-hero-slide .page-hero-content {
+    width: calc(100% - 28px);
+  }
+
+  .managed-page-hero.application-hero,
+  .managed-page-hero.application-hero .page-hero-slide .page-hero-content {
+    min-height: 640px;
+  }
+}

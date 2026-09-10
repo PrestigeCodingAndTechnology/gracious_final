@@ -1,0 +1,92 @@
+<%- include('../partials/admin-head',{title}) %>
+<% const total = Object.values(counts).reduce((sum,value)=>sum+value,0); %>
+<section class="hero-admin-summary">
+  <article><span><i class="fa-solid fa-layer-group"></i></span><div><strong><%= total %></strong><small>Managed sections</small></div></article>
+  <article><span><i class="fa-regular fa-images"></i></span><div><strong><%= sections.reduce((sum,s)=>sum+(s.images?.length||0),0) %></strong><small>Images in this view</small></div></article>
+  <article><span><i class="fa-solid fa-eye"></i></span><div><strong><%= sections.filter(s=>s.active).length %></strong><small>Visible sections</small></div></article>
+  <a class="admin-btn primary" href="#add-section"><i class="fa-solid fa-plus"></i> Add Section</a>
+</section>
+
+<nav class="hero-page-tabs" aria-label="Filter page content">
+  <a class="<%= pageFilter==='all'?'active':'' %>" href="/admin/sections">All <span><%= total %></span></a>
+  <% pages.forEach(page=>{ %><a class="<%= pageFilter===page?'active':'' %>" href="/admin/sections?page=<%= page %>"><%= pageLabels[page] %><span><%= counts[page]||0 %></span></a><% }) %>
+</nav>
+
+<section class="admin-panel" id="add-section">
+  <header class="panel-heading"><div><span class="panel-icon"><i class="fa-solid fa-square-plus"></i></span><div><h2>Add an editable website section</h2><p>Create a new section with editable copy and optional image. You can add more images after saving.</p></div></div></header>
+  <form method="post" action="/admin/sections" enctype="multipart/form-data" class="hero-admin-form">
+    <div class="hero-form-grid">
+      <label class="admin-field"><span>Public page *</span><select name="page" required><% pages.forEach(page=>{ %><option value="<%= page %>" <%= pageFilter===page?'selected':'' %>><%= pageLabels[page] %></option><% }) %></select></label>
+      <label class="admin-field"><span>Layout *</span><select name="template" required><option value="split-left">Image left / text right</option><option value="split-right">Text left / image right</option><option value="dark-gallery">Dark section with image group</option><option value="background-cta">Background image call-to-action</option><option value="collage-left">Image collage / text</option><option value="card-gallery">Image cards</option></select></label>
+      <label class="admin-field"><span>Section name *</span><input name="name" required maxlength="160" placeholder="Internal section name"></label>
+      <label class="admin-field"><span>Display order</span><input name="sortOrder" type="number" value="0"></label>
+      <label class="admin-field span-2"><span>Eyebrow / kicker</span><input name="eyebrow" maxlength="160"></label>
+      <label class="admin-field span-2"><span>Headline</span><input name="title" maxlength="300"></label>
+      <label class="admin-field span-2"><span>Lead paragraph</span><textarea name="lead" rows="3"></textarea></label>
+      <label class="admin-field span-2"><span>Main body</span><textarea name="body" rows="4"></textarea></label>
+      <label class="admin-field span-2"><span>Second paragraph</span><textarea name="secondaryBody" rows="3"></textarea></label>
+      <label class="admin-field"><span>Button label</span><input name="buttonLabel" maxlength="120"></label>
+      <label class="admin-field"><span>Button link</span><input name="buttonHref" maxlength="500" placeholder="/contact"></label>
+      <label class="admin-field"><span>Image note title</span><input name="noteTitle" maxlength="180"></label>
+      <label class="admin-field"><span>Image note text</span><input name="noteText" maxlength="500"></label>
+      <label class="admin-field span-2"><span>List / card items</span><textarea name="itemsText" rows="5" placeholder="One item per line: Title | Description | fa-icon"></textarea><small>Description and icon are optional.</small></label>
+      <label class="admin-field"><span>First image</span><input type="file" name="image" accept="image/*"></label>
+      <label class="admin-field"><span>or image URL</span><input name="imageUrl" maxlength="1000" placeholder="/media/gallery/g1.jpeg"></label>
+      <label class="admin-field"><span>Image label</span><input name="imageLabel" maxlength="160"></label>
+      <label class="admin-field"><span>Image alt text</span><input name="imageAlt" maxlength="220"></label>
+    </div>
+    <div class="hero-form-actions"><p>Changes are stored in MongoDB and reflected on the public website immediately.</p><button class="admin-btn primary" type="submit"><i class="fa-solid fa-plus"></i> Create Section</button></div>
+  </form>
+</section>
+
+<section class="admin-panel hero-library">
+  <header class="panel-heading compact"><div><span class="panel-icon"><i class="fa-solid fa-pen-ruler"></i></span><div><h2>Website sections</h2><p>Edit text, replace images, hide/show individual images, hide/show whole sections, reorder or delete.</p></div></div></header>
+  <% if(sections.length){ %><div class="hero-admin-list">
+    <% sections.forEach(section=>{ const sid=section._id||section.id; %>
+      <article class="hero-admin-card <%= section.active?'':'is-hidden' %>" id="section-<%= sid %>">
+        <div class="hero-admin-preview" style="--hero-admin-image:url('<%= section.images?.[0]?.url || '/media/brand/gracious-logo.png' %>')">
+          <div><span><%= pageLabels[section.page]||section.page %></span><small>#<%= section.sortOrder %></small></div>
+          <strong><%= section.name %></strong><p><%= section.title || 'Untitled section' %></p>
+          <em class="visibility <%= section.active?'active':'inactive' %>"><i></i><%= section.active?'Visible':'Hidden' %></em>
+        </div>
+        <div class="hero-admin-card-body">
+          <div class="hero-card-actions">
+            <form method="post" action="/admin/sections/<%= sid %>/visibility"><input type="hidden" name="active" value="<%= section.active?'false':'true' %>"><button class="admin-btn <%= section.active?'subtle':'primary' %> small" type="submit"><i class="fa-solid <%= section.active?'fa-eye-slash':'fa-eye' %>"></i><%= section.active?'Hide Section':'Show Section' %></button></form>
+            <a class="admin-btn subtle small" href="<%= section.page==='home'?'/':'/'+section.page %>" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Preview</a>
+          </div>
+          <details open><summary><i class="fa-solid fa-pen-to-square"></i> Edit section content <i class="fa-solid fa-chevron-down"></i></summary>
+            <form method="post" action="/admin/sections/<%= sid %>" class="hero-edit-form">
+              <div class="hero-form-grid">
+                <label class="admin-field"><span>Page</span><select name="page"><% pages.forEach(page=>{ %><option value="<%= page %>" <%= section.page===page?'selected':'' %>><%= pageLabels[page] %></option><% }) %></select></label>
+                <label class="admin-field"><span>Layout</span><select name="template"><% [['split-left','Image left / text right'],['split-right','Text left / image right'],['dark-gallery','Dark image group'],['background-cta','Background CTA'],['collage-left','Image collage'],['card-gallery','Image cards']].forEach(([value,label])=>{ %><option value="<%= value %>" <%= section.template===value?'selected':'' %>><%= label %></option><% }) %></select></label>
+                <label class="admin-field"><span>Section name</span><input name="name" value="<%= section.name %>" required></label><label class="admin-field"><span>Order</span><input type="number" name="sortOrder" value="<%= section.sortOrder %>"></label>
+                <label class="admin-field span-2"><span>Eyebrow</span><input name="eyebrow" value="<%= section.eyebrow||'' %>"></label><label class="admin-field span-2"><span>Headline</span><input name="title" value="<%= section.title||'' %>"></label>
+                <label class="admin-field span-2"><span>Lead</span><textarea name="lead" rows="3"><%= section.lead||'' %></textarea></label><label class="admin-field span-2"><span>Main body</span><textarea name="body" rows="4"><%= section.body||'' %></textarea></label><label class="admin-field span-2"><span>Second paragraph</span><textarea name="secondaryBody" rows="3"><%= section.secondaryBody||'' %></textarea></label>
+                <label class="admin-field"><span>Button label</span><input name="buttonLabel" value="<%= section.buttonLabel||'' %>"></label><label class="admin-field"><span>Button link</span><input name="buttonHref" value="<%= section.buttonHref||'' %>"></label>
+                <label class="admin-field"><span>Image note title</span><input name="noteTitle" value="<%= section.noteTitle||'' %>"></label><label class="admin-field"><span>Image note text</span><input name="noteText" value="<%= section.noteText||'' %>"></label>
+                <label class="admin-field"><span>Badge text</span><input name="badgeText" value="<%= section.badgeText||'' %>"></label>
+                <label class="admin-field span-2"><span>List / card items</span><textarea name="itemsText" rows="5"><%= formatItems(section.items||[]) %></textarea><small>One per line: Title | Description | fa-icon</small></label>
+              </div><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Section Changes</button>
+            </form>
+          </details>
+          <details><summary><i class="fa-regular fa-images"></i> Manage section images (<%= section.images?.length||0 %>) <i class="fa-solid fa-chevron-down"></i></summary>
+            <div class="hero-admin-list">
+              <% (section.images||[]).forEach(image=>{ const iid=image._id||image.id; %>
+                <div class="admin-panel" style="margin-top:14px;padding:16px">
+                  <div style="display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:start"><img src="<%= image.url %>" alt="" style="width:130px;height:95px;object-fit:cover;border-radius:12px"><div>
+                    <div class="hero-card-actions"><form method="post" action="/admin/sections/<%= sid %>/images/<%= iid %>/visibility"><input type="hidden" name="visible" value="<%= image.visible===false?'true':'false' %>"><button class="admin-btn small <%= image.visible===false?'primary':'subtle' %>" type="submit"><i class="fa-solid <%= image.visible===false?'fa-eye':'fa-eye-slash' %>"></i><%= image.visible===false?'Unhide Image':'Hide Image' %></button></form></div>
+                    <form method="post" action="/admin/sections/<%= sid %>/images/<%= iid %>" enctype="multipart/form-data" class="hero-edit-form"><div class="hero-form-grid"><label class="admin-field"><span>Label</span><input name="label" value="<%= image.label||'' %>"></label><label class="admin-field"><span>Order</span><input type="number" name="sortOrder" value="<%= image.sortOrder||0 %>"></label><label class="admin-field span-2"><span>Current image URL</span><input name="imageUrl" value="<%= image.url %>"></label><label class="admin-field"><span>Replace image</span><input type="file" name="image" accept="image/*"></label><label class="admin-field"><span>Alt text</span><input name="alt" value="<%= image.alt||'' %>"></label><label class="admin-field"><span>Card title</span><input name="captionTitle" value="<%= image.captionTitle||'' %>"></label><label class="admin-field"><span>Card text</span><input name="captionText" value="<%= image.captionText||'' %>"></label></div><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Image</button></form>
+                    <form method="post" action="/admin/sections/<%= sid %>/images/<%= iid %>?_method=DELETE" data-confirm="Delete this image from the section?"><button class="admin-btn subtle small" type="submit"><i class="fa-regular fa-trash-can"></i> Delete Image</button></form>
+                  </div></div>
+                </div>
+              <% }) %>
+              <form method="post" action="/admin/sections/<%= sid %>/images" enctype="multipart/form-data" class="hero-edit-form" style="margin-top:18px"><h3>Add another image</h3><div class="hero-form-grid"><label class="admin-field"><span>Upload</span><input type="file" name="image" accept="image/*"></label><label class="admin-field"><span>or URL</span><input name="imageUrl"></label><label class="admin-field"><span>Label</span><input name="label"></label><label class="admin-field"><span>Alt text</span><input name="alt"></label><label class="admin-field"><span>Card title</span><input name="captionTitle"></label><label class="admin-field"><span>Card text</span><input name="captionText"></label><label class="admin-field"><span>Order</span><input type="number" name="sortOrder" value="0"></label></div><button class="admin-btn primary small" type="submit"><i class="fa-solid fa-plus"></i> Add Image</button></form>
+            </div>
+          </details>
+          <form method="post" action="/admin/sections/<%= sid %>?_method=DELETE" data-confirm="Delete this section permanently?"><button class="admin-btn subtle small" type="submit"><i class="fa-regular fa-trash-can"></i> Delete Section</button></form>
+        </div>
+      </article>
+    <% }) %>
+  </div><% } else { %><div class="admin-empty"><span><i class="fa-solid fa-layer-group"></i></span><h2>No managed sections here</h2><p>Create one above or choose another page.</p></div><% } %>
+</section>
+<%- include('../partials/admin-foot') %>

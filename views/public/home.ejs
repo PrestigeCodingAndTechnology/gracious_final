@@ -12,35 +12,11 @@
     </div>
   </section>
 
-  <section class="section welcome-section">
-    <div class="container split split-feature">
-      <div class="image-composition reveal">
-        <img class="image-main" src="/media/gallery/g10.jpeg" alt="Comfortable private room at Gracious Senior Living">
-        <div class="image-note"><i class="fa-solid fa-heart"></i><span><strong>Family-style living</strong>Care that always feels personal.</span></div>
-        <span class="image-pattern" aria-hidden="true"></span>
-      </div>
-      <div class="section-copy reveal">
-        <span class="eyebrow dark">Welcome to Gracious</span>
-        <h2>Not an institution. A close-knit community devoted to care.</h2>
-        <p class="lead">Gracious Senior Living offers a thoughtful alternative to large, institutional settings—giving your loved one a peaceful home, familiar rhythms and personal attention.</p>
-        <p>Our intimate size supports genuine relationships. We take time to understand preferences, routines, health needs and the little things that help each resident feel secure and cherished.</p>
-        <ul class="check-list">
-          <li><i class="fa-solid fa-check"></i> Individualized care that adapts with changing needs</li>
-          <li><i class="fa-solid fa-check"></i> Warm communication that keeps families informed</li>
-          <li><i class="fa-solid fa-check"></i> Respect for independence, faith and personal choice</li>
-        </ul>
-        <a class="text-link" href="/about">Discover our story <i class="fa-solid fa-arrow-right"></i></a>
-      </div>
-    </div>
-  </section>
+  <% const welcomeSection = pageSections.find(s=>s.seedKey==='home-welcome'); if(welcomeSection){ %><%- include('../partials/page-section',{section:welcomeSection,settings}) %><% } %>
 
   <section class="section services-section">
     <div class="container">
-      <div class="section-heading centered reveal">
-        <span class="eyebrow dark">Care with intention</span>
-        <h2>Everything needed for safer, fuller days.</h2>
-        <p>Support is shaped around the resident—not the other way around.</p>
-      </div>
+      <div class="section-heading centered reveal"><span class="eyebrow dark">Care with intention</span><h2>Everything needed for safer, fuller days.</h2><p>Support is shaped around the resident—not the other way around.</p></div>
       <div class="service-grid">
         <article class="service-card reveal"><span class="service-number">01</span><i class="fa-solid fa-hands-holding-circle"></i><h3>Personal Care</h3><p>Respectful support with bathing, dressing, grooming, mobility and other daily needs.</p><a href="/care">Learn more <i class="fa-solid fa-arrow-right"></i></a></article>
         <article class="service-card reveal"><span class="service-number">02</span><i class="fa-solid fa-capsules"></i><h3>Health &amp; Medication</h3><p>Medication assistance, health observation and coordination with families and providers.</p><a href="/care">Learn more <i class="fa-solid fa-arrow-right"></i></a></article>
@@ -50,65 +26,19 @@
     </div>
   </section>
 
-  <section class="section home-life-section">
-    <div class="container home-life-grid">
-      <div class="home-life-copy reveal">
-        <span class="eyebrow">Where comfort meets care</span>
-        <h2>A home designed around everyday wellbeing.</h2>
-        <p>Private bedrooms, comforting meals, outdoor space and a welcoming common area create room for both quiet moments and community connection.</p>
-        <div class="mini-features">
-          <span><i class="fa-solid fa-bed"></i> Private bedrooms</span>
-          <span><i class="fa-solid fa-utensils"></i> Three meals plus snacks</span>
-          <span><i class="fa-solid fa-seedling"></i> Garden &amp; screened porch</span>
-          <span><i class="fa-solid fa-car-side"></i> Transportation assistance</span>
-        </div>
-        <a class="btn btn-light" href="/living">Explore Daily Living <i class="fa-solid fa-arrow-right"></i></a>
-      </div>
-      <div class="home-life-gallery reveal">
-        <img src="/media/gallery/g4.jpeg" alt="Two women residents enjoying a quiet conversation">
-        <img src="/media/gallery/g8.jpeg" alt="Women residents enjoying a card game">
-        <img src="/media/gallery/g12.jpeg" alt="Woman resident relaxing in a sunny common area">
-      </div>
-    </div>
-  </section>
+  <% const homeLife = pageSections.find(s=>s.seedKey==='home-life'); if(homeLife){ %><%- include('../partials/page-section',{section:homeLife,settings}) %><% } %>
 
-  <section class="section journey-section">
-    <div class="container">
-      <div class="section-heading centered reveal"><span class="eyebrow dark">A thoughtful transition</span><h2>From first conversation to feeling at home.</h2></div>
-      <div class="journey-grid">
-        <article class="reveal"><span>1</span><h3>Let’s Talk</h3><p>Share what your family needs and ask every question on your mind.</p></article>
-        <article class="reveal"><span>2</span><h3>Tour the Home</h3><p>Visit the living spaces, meet our team and experience the atmosphere.</p></article>
-        <article class="reveal"><span>3</span><h3>Plan Together</h3><p>We create a personal approach around routines, health and preferences.</p></article>
-        <article class="reveal"><span>4</span><h3>Welcome Home</h3><p>We support a comfortable transition and keep your family connected.</p></article>
-      </div>
-    </div>
-  </section>
+  <section class="section journey-section"><div class="container"><div class="section-heading centered reveal"><span class="eyebrow dark">A thoughtful transition</span><h2>From first conversation to feeling at home.</h2></div><div class="journey-grid">
+    <article class="reveal"><span>1</span><h3>Let’s Talk</h3><p>Share what your family needs and ask every question on your mind.</p></article>
+    <article class="reveal"><span>2</span><h3>Tour the Home</h3><p>Visit the living spaces, meet our team and experience the atmosphere.</p></article>
+    <article class="reveal"><span>3</span><h3>Plan Together</h3><p>We create a personal approach around routines, health and preferences.</p></article>
+    <article class="reveal"><span>4</span><h3>Welcome Home</h3><p>We support a comfortable transition and keep your family connected.</p></article>
+  </div></div></section>
 
-  <section class="section testimonials-section">
-    <div class="container">
-      <div class="testimonial-heading reveal">
-        <div><span class="eyebrow dark">Family voices</span><h2>Care felt. Trust shared.</h2></div>
-        <div class="testimonial-actions"><a class="text-link" href="/reviews">View all reviews <i class="fa-solid fa-arrow-right"></i></a><div class="carousel-buttons"><button type="button" data-review-prev aria-label="Previous reviews"><i class="fa-solid fa-arrow-left"></i></button><button type="button" data-review-next aria-label="Next reviews"><i class="fa-solid fa-arrow-right"></i></button></div></div>
-      </div>
-      <div class="review-track" data-review-track>
-        <% if(reviews.length){ reviews.forEach(r=>{ %>
-          <article class="review-card reveal">
-            <div class="quote-mark"><i class="fa-solid fa-quote-left"></i></div>
-            <div class="stars" role="img" aria-label="<%= r.rating %> out of 5 stars"><%= '★'.repeat(r.rating) %><span><%= '★'.repeat(5-r.rating) %></span></div>
-            <blockquote><%= r.message %></blockquote>
-            <div class="reviewer"><span><%= r.name.charAt(0).toUpperCase() %></span><div><strong><%= r.name %></strong><small><%= r.relationship || 'Gracious community' %></small></div></div>
-          </article>
-        <% }) } else { %>
-          <article class="review-card review-empty reveal"><i class="fa-regular fa-message"></i><h3>Family stories belong here.</h3><p>Approved reviews will appear as families share their experiences.</p><a class="text-link" href="/reviews#review-form">Share your experience <i class="fa-solid fa-arrow-right"></i></a></article>
-        <% } %>
-      </div>
-      <div class="review-share-cta reveal"><p>Have an experience to share? Your review will appear here after administrator approval.</p><a class="btn btn-primary" href="/reviews#review-form">Write a Review <i class="fa-solid fa-arrow-right"></i></a></div>
-    </div>
-  </section>
+  <section class="section testimonials-section"><div class="container"><div class="testimonial-heading reveal"><div><span class="eyebrow dark">Family voices</span><h2>Care felt. Trust shared.</h2></div><div class="testimonial-actions"><a class="text-link" href="/reviews">View all reviews <i class="fa-solid fa-arrow-right"></i></a><div class="carousel-buttons"><button type="button" data-review-prev aria-label="Previous reviews"><i class="fa-solid fa-arrow-left"></i></button><button type="button" data-review-next aria-label="Next reviews"><i class="fa-solid fa-arrow-right"></i></button></div></div></div><div class="review-track" data-review-track>
+    <% if(reviews.length){ reviews.forEach(r=>{ %><article class="review-card reveal"><div class="quote-mark"><i class="fa-solid fa-quote-left"></i></div><div class="stars" role="img" aria-label="<%= r.rating %> out of 5 stars"><%= '★'.repeat(r.rating) %><span><%= '★'.repeat(5-r.rating) %></span></div><blockquote><%= r.message %></blockquote><div class="reviewer"><span><%= r.name.charAt(0).toUpperCase() %></span><div><strong><%= r.name %></strong><small><%= r.relationship || 'Gracious community' %></small></div></div></article><% }) } else { %><article class="review-card review-empty reveal"><i class="fa-regular fa-message"></i><h3>Family stories belong here.</h3><p>Approved reviews will appear as families share their experiences.</p><a class="text-link" href="/reviews#review-form">Share your experience <i class="fa-solid fa-arrow-right"></i></a></article><% } %>
+  </div><div class="review-share-cta reveal"><p>Have an experience to share? Your review will appear here after administrator approval.</p><a class="btn btn-primary" href="/reviews#review-form">Write a Review <i class="fa-solid fa-arrow-right"></i></a></div></div></section>
 
-  <section class="visit-cta">
-    <div class="visit-cta-media" aria-hidden="true"></div>
-    <div class="container visit-cta-content reveal"><span class="eyebrow">See it for yourself</span><h2>The best way to understand Gracious is to visit.</h2><p>Walk through the home, meet the people behind the care and picture the possibilities for your loved one.</p><div class="actions"><a class="btn btn-gold" href="/contact">Schedule a Personal Tour <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-ghost" href="tel:<%= (settings.phone || '704-218-2424').replace(/[^0-9+]/g,'') %>"><i class="fa-solid fa-phone"></i> Call <%= settings.phone || '704-218-2424' %></a></div></div>
-  </section>
+  <% const visitSection = pageSections.find(s=>s.seedKey==='home-visit'); if(visitSection){ %><%- include('../partials/page-section',{section:visitSection,settings}) %><% } %>
 </main>
 <%- include('../partials/footer',{settings}) %>
