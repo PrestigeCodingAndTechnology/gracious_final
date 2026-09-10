@@ -21,6 +21,7 @@ const heroSlideSchema = new mongoose.Schema({
   text: { type: String, trim: true, maxlength: 700 },
   imageUrl: { type: String, required: true, trim: true },
   imageAlt: { type: String, trim: true, maxlength: 220 },
+  imageVisible: { type: Boolean, default: true },
   backgroundPosition: { type: String, trim: true, maxlength: 80, default: 'center center' },
   primaryLabel: { type: String, trim: true, maxlength: 80 },
   primaryHref: { type: String, trim: true, maxlength: 300 },
