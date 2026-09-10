@@ -57,8 +57,8 @@ app.use(exposeUser);
 app.use(exposePageSections);
 app.use('/api/chat', chatRoutes);
 app.use('/admin', authRoutes);
-app.use('/admin', pageSectionsAdminRoutes);
 app.use('/admin', adminRoutes);
+app.use('/admin', pageSectionsAdminRoutes);
 app.use('/', publicRoutes);
 app.use((req, res) => res.status(404).render('public/404', { title: 'Page Not Found', settings: {} }));
 app.use((err, req, res, next) => {
