@@ -1,3 +1,6 @@
+<% if (typeof pageSections !== 'undefined') { (pageSections || []).filter(section => section.custom).forEach(section => { %>
+  <%- include('page-section',{section,settings}) %>
+<% }) } %>
 <section class="prefooter" aria-label="Schedule a tour">
   <div class="container prefooter-inner">
     <div>
