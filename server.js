@@ -17,6 +17,7 @@ import chatRoutes from './routes/chat.js';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import pageSectionsAdminRoutes from './routes/pageSectionsAdmin.js';
+import heroImageVisibilityRoutes from './routes/heroImageVisibility.js';
 import { registerChatSocket } from './realtime/chatSocket.js';
 import { ensureDefaultContent } from './utils/ensureContent.js';
 import { ensurePageSections } from './utils/ensurePageSections.js';
@@ -59,6 +60,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/admin', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/admin', pageSectionsAdminRoutes);
+app.use('/admin', heroImageVisibilityRoutes);
 app.use('/', publicRoutes);
 app.use((req, res) => res.status(404).render('public/404', { title: 'Page Not Found', settings: {} }));
 app.use((err, req, res, next) => {
