@@ -10,11 +10,9 @@
     <article class="care-card reveal"><span><i class="fa-solid fa-face-laugh-beam"></i></span><h3>Social &amp; Emotional Care</h3><p>Companionship, group activities, outings and meaningful engagement that support connection and joy.</p></article>
     <article class="care-card reveal"><span><i class="fa-solid fa-hands-praying"></i></span><h3>Spiritual Wellbeing</h3><p>Respectful access to faith, cultural activities and spiritual encouragement that bring comfort and peace.</p></article>
   </div></section>
-  <section class="section care-detail-section" id="specialized-care"><div class="container split split-feature"><div class="care-detail-image reveal"><img src="/media/gallery/g12.jpeg" alt="Woman resident relaxing comfortably at Gracious Senior Living"><span class="floating-badge"><i class="fa-solid fa-shield-heart"></i> Support 24 hours a day</span></div><div class="section-copy reveal"><span class="eyebrow dark">Specialized support</span><h2>Calm, compassionate help through changing seasons.</h2><div class="detail-list">
-    <article><i class="fa-solid fa-brain"></i><div><h3>Memory &amp; Dementia Support</h3><p>Structured routines, tailored activities and a familiar environment for residents living with cognitive changes.</p></div></article>
-    <article><i class="fa-solid fa-hand-holding-medical"></i><div><h3>Palliative &amp; Comfort Care</h3><p>Comfort-focused support that protects dignity and quality of life through serious illness and end-of-life needs.</p></div></article>
-    <article><i class="fa-solid fa-calendar-day"></i><div><h3>Respite Care</h3><p>Dependable short-term care that gives family caregivers time to rest, travel or attend to other responsibilities.</p></div></article>
-  </div></div></div></section>
+
+  <% const specializedSection = pageSections.find(s=>s.seedKey==='care-specialized'); if(specializedSection){ %><%- include('../partials/page-section',{section:specializedSection,settings}) %><% } %>
+
   <section class="amenities-section"><div class="container amenities-layout"><div class="amenities-title reveal"><span class="eyebrow">Thoughtful comforts</span><h2>Amenities that make daily life easier.</h2><p>Everything is arranged to support comfort, safety, nutrition and meaningful independence.</p><a class="btn btn-light" href="/living">See Our Living Spaces <i class="fa-solid fa-arrow-right"></i></a></div><div class="amenity-list reveal">
     <span><i class="fa-solid fa-bed"></i> Newly remodeled home with private bedrooms</span>
     <span><i class="fa-solid fa-house-medical"></i> Access to concierge physicians or nurses</span>
