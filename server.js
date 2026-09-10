@@ -11,12 +11,14 @@ import methodOverride from 'method-override';
 import { Server as SocketIOServer } from 'socket.io';
 import { connectDB } from './config/db.js';
 import { exposeUser } from './middleware/auth.js';
+import { exposePageSections } from './middleware/pageSections.js';
 import publicRoutes from './routes/public.js';
 import chatRoutes from './routes/chat.js';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import { registerChatSocket } from './realtime/chatSocket.js';
 import { ensureDefaultContent } from './utils/ensureContent.js';
+import { ensurePageSections } from './utils/ensurePageSections.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +28,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 await connectDB();
 await ensureDefaultContent();
+await ensurePageSections();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -50,6 +53,7 @@ io.engine.use(sessionMiddleware);
 registerChatSocket(io);
 
 app.use(exposeUser);
+app.use(exposePageSections);
 app.use('/api/chat', chatRoutes);
 app.use('/admin', authRoutes);
 app.use('/admin', adminRoutes);
