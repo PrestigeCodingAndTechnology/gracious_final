@@ -4,8 +4,8 @@
 <% if (managedHeroPage === 'home') { %>
   <% if (heroSlides.length) { %>
   <section class="hero-slider" data-hero-slider aria-label="Welcome to Gracious Senior Living">
-    <% heroSlides.forEach((slide, index) => { %>
-      <article class="hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--hero-image:url('<%= slide.imageUrl %>');--hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+    <% heroSlides.forEach((slide, index) => { const heroImage = slide.imageVisible === false ? 'none' : `url('${slide.imageUrl}')`; %>
+      <article class="hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--hero-image:<%= heroImage %>;--hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
         <div class="container hero-content">
           <% if (slide.eyebrow) { %><span class="hero-kicker"><% if (slide.icon) { %><i class="fa-solid <%= slide.icon %>"></i><% } %> <%= slide.eyebrow %></span><% } %>
           <<%= index === 0 ? 'h1' : 'h2' %>><%= slide.title %></<%= index === 0 ? 'h1' : 'h2' %>>
@@ -27,8 +27,8 @@
   <% } %>
 <% } else if (heroSlides.length) { %>
   <section class="page-hero managed-page-hero <%= managedHeroPage %>-hero <%= heroSlides.length > 1 ? 'has-hero-slides' : '' %>" data-page-hero-slider aria-label="<%= heroSlides[0]?.eyebrow || title %>">
-    <% heroSlides.forEach((slide, index) => { %>
-      <article class="page-hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--page-hero-image:url('<%= slide.imageUrl %>');--page-hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+    <% heroSlides.forEach((slide, index) => { const pageHeroImage = slide.imageVisible === false ? 'none' : `url('${slide.imageUrl}')`; %>
+      <article class="page-hero-slide <%= index === 0 ? 'is-active' : '' %>" style="--page-hero-image:<%= pageHeroImage %>;--page-hero-position:<%= slide.backgroundPosition || 'center center' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
         <div class="container page-hero-content">
           <% if (slide.eyebrow) { %><span class="eyebrow"><% if (slide.icon) { %><i class="fa-solid <%= slide.icon %>"></i> <% } %><%= slide.eyebrow %></span><% } %>
           <h1><%= slide.title %></h1>
