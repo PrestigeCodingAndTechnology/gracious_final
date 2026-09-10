@@ -1,0 +1,54 @@
+<% const visibleImages = (section.images || []).filter(image => image.visible !== false); %>
+<% if (section.template === 'split-left' || section.template === 'split-right') { %>
+<section class="section <%= section.seedKey === 'about-team' ? 'team-section' : '' %>" <%= section.seedKey === 'care-specialized' ? 'id="specialized-care"' : '' %>>
+  <div class="container split split-feature <%= section.template === 'split-right' ? 'reverse-mobile' : '' %>">
+    <% if (section.template === 'split-left' && visibleImages[0]) { %>
+      <div class="image-composition <%= section.seedKey === 'care-specialized' ? 'care-detail-image' : '' %> reveal">
+        <img class="image-main" src="<%= visibleImages[0].url %>" alt="<%= visibleImages[0].alt || section.title %>">
+        <% if (section.badgeText) { %><span class="floating-badge"><i class="fa-solid fa-shield-heart"></i> <%= section.badgeText %></span><% } %>
+        <% if (section.noteTitle || section.noteText) { %><div class="image-note"><i class="fa-solid fa-heart"></i><span><% if(section.noteTitle){ %><strong><%= section.noteTitle %></strong><% } %><%= section.noteText || '' %></span></div><% } %>
+      </div>
+    <% } %>
+    <div class="section-copy reveal">
+      <% if (section.eyebrow) { %><span class="eyebrow dark"><%= section.eyebrow %></span><% } %>
+      <% if (section.title) { %><h2><%= section.title %></h2><% } %>
+      <% if (section.lead) { %><p class="lead"><%= section.lead %></p><% } %>
+      <% if (section.body) { %><p><%= section.body %></p><% } %>
+      <% if (section.secondaryBody) { %><p><%= section.secondaryBody %></p><% } %>
+      <% if ((section.items || []).length) { %>
+        <% if (section.seedKey === 'care-specialized') { %><div class="detail-list"><% section.items.forEach(item => { %><article><i class="fa-solid <%= item.icon || 'fa-circle-check' %>"></i><div><h3><%= item.title %></h3><p><%= item.text || '' %></p></div></article><% }) %></div>
+        <% } else { %><ul class="check-list"><% section.items.forEach(item => { %><li><i class="fa-solid fa-check"></i> <%= item.title %></li><% }) %></ul><% } %>
+      <% } %>
+      <% if (section.buttonLabel && section.buttonHref) { %><a class="<%= section.seedKey === 'about-team' ? 'btn btn-primary' : 'text-link' %>" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %>
+    </div>
+    <% if (section.template === 'split-right' && visibleImages[0]) { %>
+      <div class="image-composition about-image reveal"><img class="image-main" src="<%= visibleImages[0].url %>" alt="<%= visibleImages[0].alt || section.title %>"><% if (section.noteTitle || section.noteText) { %><div class="image-note"><i class="fa-solid fa-people-roof"></i><span><% if(section.noteTitle){ %><strong><%= section.noteTitle %></strong><% } %><%= section.noteText || '' %></span></div><% } %></div>
+    <% } %>
+  </div>
+</section>
+<% } else if (section.template === 'dark-gallery') { %>
+<section class="section home-life-section">
+  <div class="container home-life-grid">
+    <div class="home-life-copy reveal"><% if(section.eyebrow){ %><span class="eyebrow"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.body){ %><p><%= section.body %></p><% } %>
+      <% if ((section.items || []).length) { %><div class="mini-features"><% section.items.forEach(item => { %><span><i class="fa-solid <%= item.icon || 'fa-circle-check' %>"></i> <%= item.title %></span><% }) %></div><% } %>
+      <% if(section.buttonLabel && section.buttonHref){ %><a class="btn btn-light" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %>
+    </div>
+    <% if(visibleImages.length){ %><div class="home-life-gallery reveal"><% visibleImages.forEach(image => { %><img src="<%= image.url %>" alt="<%= image.alt || section.title %>"><% }) %></div><% } %>
+  </div>
+</section>
+<% } else if (section.template === 'background-cta') { %>
+<section class="visit-cta">
+  <% if(visibleImages[0]){ %><div class="visit-cta-media" aria-hidden="true" style="background-image:linear-gradient(90deg,rgba(5,25,20,.98),rgba(5,25,20,.78) 55%,rgba(5,25,20,.2)),url('<%= visibleImages[0].url %>')"></div><% } %>
+  <div class="container visit-cta-content reveal"><% if(section.eyebrow){ %><span class="eyebrow"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.body){ %><p><%= section.body %></p><% } %><div class="actions"><% if(section.buttonLabel && section.buttonHref){ %><a class="btn btn-gold" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a><% } %><a class="btn btn-ghost" href="tel:<%= (settings.phone || '704-218-2424').replace(/[^0-9+]/g,'') %>"><i class="fa-solid fa-phone"></i> Call <%= settings.phone || '704-218-2424' %></a></div></div>
+</section>
+<% } else if (section.template === 'collage-left') { %>
+<section class="section"><div class="container split split-feature">
+  <% if(visibleImages.length){ %><div class="living-collage reveal"><% visibleImages.forEach((image,index) => { %><img class="<%= index === 0 ? 'living-large' : 'living-small' %>" src="<%= image.url %>" alt="<%= image.alt || section.title %>"><% }) %><% if(section.noteText){ %><span class="living-caption"><i class="fa-solid fa-sun"></i> <%= section.noteText %></span><% } %></div><% } %>
+  <div class="section-copy reveal"><% if(section.eyebrow){ %><span class="eyebrow dark"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2><% if(section.lead){ %><p class="lead"><%= section.lead %></p><% } %><% if(section.body){ %><p><%= section.body %></p><% } %><% if((section.items || []).length){ %><ul class="check-list"><% section.items.forEach(item => { %><li><i class="fa-solid fa-check"></i> <%= item.title %></li><% }) %></ul><% } %></div>
+</div></section>
+<% } else if (section.template === 'card-gallery') { %>
+<section class="spaces-showcase"><div class="container"><div class="section-heading light centered reveal"><% if(section.eyebrow){ %><span class="eyebrow"><%= section.eyebrow %></span><% } %><h2><%= section.title %></h2></div>
+  <% if(visibleImages.length){ %><div class="space-grid"><% visibleImages.forEach((image,index) => { %><article class="space-card <%= index === 0 ? 'space-wide' : '' %> reveal"><img src="<%= image.url %>" alt="<%= image.alt || image.captionTitle || section.title %>"><div><span><%= image.captionTitle || image.label || '' %></span><p><%= image.captionText || '' %></p></div></article><% }) %></div><% } %>
+  <% if(section.buttonLabel && section.buttonHref){ %><div class="center-action reveal"><a class="btn btn-gold" href="<%= section.buttonHref %>"><%= section.buttonLabel %> <i class="fa-solid fa-arrow-right"></i></a></div><% } %>
+</div></section>
+<% } %>
